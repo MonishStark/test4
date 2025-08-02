@@ -164,6 +164,7 @@ const VersionPlayer: React.FC<VersionPlayerProps> = ({ track, version }) => {
 				</button>
 				<button
 					className='p-2 rounded-full hover:bg-gray-200'
+					// skipcq: JS-0417
 					onClick={handleSkipForward}>
 					<span className='material-icons'>skip_next</span>
 				</button>
@@ -176,6 +177,7 @@ const VersionPlayer: React.FC<VersionPlayerProps> = ({ track, version }) => {
 				ref={audioRef}
 				src={`/api/audio/${track.id}/extended?version=${version}`}
 				preload='metadata'
+				// skipcq: JS-0417
 				onLoadedMetadata={(e) =>
 					setDuration((e.target as HTMLAudioElement).duration)
 				}
