@@ -128,6 +128,7 @@ const Home: React.FC = () => {
 					<UploadSection onUploadSuccess={handleUploadSuccess} />
 					{currentTrackId && (
 						<button
+							// skipcq: JS-0417
 							onClick={async () => {
 								if (
 									window.confirm(
@@ -163,12 +164,14 @@ const Home: React.FC = () => {
 					{isProcessing && currentTrackId ? (
 						<ProcessingInfo
 							trackId={currentTrackId}
+							// skipcq: JS-0417
 							onComplete={handleProcessingComplete}
 							onCancel={handleProcessingCancel}
 						/>
 					) : (
 						<SettingsPanel
 							trackId={currentTrackId}
+							// skipcq: JS-0417
 							onProcessingStart={handleProcessingStart}
 							disabled={isProcessed}
 						/>
