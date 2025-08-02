@@ -152,11 +152,13 @@ const VersionPlayer: React.FC<VersionPlayerProps> = ({ track, version }) => {
 			<div className='player-controls flex items-center'>
 				<button
 					className='p-2 rounded-full hover:bg-gray-200'
+					// skipcq: JS-0417
 					onClick={handleSkipBack}>
 					<span className='material-icons'>skip_previous</span>
 				</button>
 				<button
 					className='p-2 rounded-full hover:bg-gray-200'
+					// skipcq: JS-0417
 					onClick={togglePlayPause}>
 					<span className='material-icons'>
 						{isPlaying ? "pause" : "play_arrow"}

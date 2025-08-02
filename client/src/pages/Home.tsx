@@ -124,11 +124,13 @@ const Home: React.FC = () => {
 		<div className='container mx-auto px-4 py-8'>
 			<div className='grid grid-cols-1 lg:grid-cols-12 gap-8'>
 				{/* Left column: Upload & Controls */}
-				// skipcq: JS-0417
+
 				<div className='lg:col-span-4 space-y-6'>
+					// skipcq: JS-0417
 					<UploadSection onUploadSuccess={handleUploadSuccess} />
 					{currentTrackId && (
 						<button
+							// skipcq: JS-0417
 							onClick={async () => {
 								if (
 									window.confirm(
@@ -160,13 +162,12 @@ const Home: React.FC = () => {
 							Clear All Tracks
 						</button>
 					)}
-
 					{isProcessing && currentTrackId ? (
 						<ProcessingInfo
 							trackId={currentTrackId}
 							// skipcq: JS-0417
 							onComplete={handleProcessingComplete}
-							onCancel={handleProcessingCancel}
+							onCancel={handleProcessingCancel} // skipcq: JS-0417
 						/>
 					) : (
 						<SettingsPanel

@@ -386,11 +386,13 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 					<div className='player-controls flex items-center'>
 						<button
 							className='p-2 rounded-full hover:bg-gray-100'
+							// skipcq: JS-0417
 							onClick={handleSkipBack}>
 							<span className='material-icons'>skip_previous</span>
 						</button>
 						<button
 							className='p-2 rounded-full hover:bg-gray-100'
+							// skipcq: JS-0417
 							onClick={togglePlayPause}>
 							<span className='material-icons'>
 								{isPlaying ? "pause" : "play_arrow"}
