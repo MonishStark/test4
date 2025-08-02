@@ -119,14 +119,9 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
 		.filter(Boolean)
 		.join("\n");
 
-	// skipcq: JS-0440 - dangerouslySetInnerHTML used for controlled CSS generation
-	// This is safe because:
-	// 1. Chart ID is sanitized to prevent CSS injection
-	// 2. Color values are validated against safe patterns
-	// 3. CSS property names are sanitized
-	// 4. No user input is directly inserted
 	return (
 		<style
+			// skipcq: JS-0440 - dangerouslySetInnerHTML used for controlled CSS generation
 			dangerouslySetInnerHTML={{
 				__html: cssContent,
 			}}
