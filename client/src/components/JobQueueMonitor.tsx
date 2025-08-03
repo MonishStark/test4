@@ -454,6 +454,7 @@ export const JobQueueMonitor: React.FC<JobQueueMonitorProps> = ({
 								<Button
 									variant='outline'
 									size='sm'
+									// skipcq: JS-0417
 									onClick={() => cancelJob(jobId)}
 									className='flex items-center gap-1'>
 									<Trash2 size={14} />

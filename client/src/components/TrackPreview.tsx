@@ -120,6 +120,7 @@ const TrackPreview: React.FC<TrackPreviewProps> = ({
 											? "text-primary border-b-2 border-primary"
 											: "text-gray-500 hover:text-gray-700"
 									}`}
+									// skipcq: JS-0417
 									onClick={() => handleTabClick("original")}>
 									Original Track
 								</button>
@@ -134,6 +135,7 @@ const TrackPreview: React.FC<TrackPreviewProps> = ({
 											? "text-gray-500 hover:text-gray-700"
 											: "text-white"
 									}`}
+									// skipcq: JS-0417
 									onClick={() => handleTabClick("extended")}>
 									Extended Version
 								</button>

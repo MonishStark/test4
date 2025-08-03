@@ -43,6 +43,7 @@ export const EnhancedUpload: React.FC<EnhancedUploadProps> = ({
 			<CardContent>
 				<Tabs
 					value={activeTab}
+					// skipcq: JS-0417
 					onValueChange={(value) =>
 						setActiveTab(value as "standard" | "streaming")
 					}>
