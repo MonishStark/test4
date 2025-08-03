@@ -21,7 +21,8 @@ function sanitizeForLog(input) {
 	}
 	// Remove newlines, carriage returns, and control characters that could be used for log injection
 	return input
-		.replace(/[\r\n\t\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "")
+		.replace(/[\r\n\t]/g, "")
+		.replace(/[^\x20-\x7E]/g, "") // Keep only printable ASCII characters
 		.substring(0, 1000);
 }
 
