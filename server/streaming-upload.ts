@@ -161,7 +161,7 @@ export function createStreamingUploader(
 				await ensureUploadDirectory(config.uploadDirectory);
 				cb(null, config.uploadDirectory);
 			} catch (error) {
-				cb(error as Error, "");
+				cb(error as Error, ""); // skipcq: JS-0255
 			}
 		},
 		filename: (req, file, cb) => {
@@ -530,6 +530,7 @@ export function handleStreamingErrors() {
 
 // Type augmentation for Express Request
 declare global {
+	// skipcq: JS-0337
 	namespace Express {
 		interface Request {
 			uploadId?: string;
