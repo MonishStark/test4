@@ -332,9 +332,8 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 											currentTime / duration;
 
 										return (
-											// skipcq: JS-0437
 											<div
-												key={`waveform-bar-${i}`}
+												key={`waveform-bar-${i}`} // skipcq: JS-0437
 												className={
 													"waveform-bar transition-colors duration-300"
 												}
@@ -427,9 +426,8 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 					</div>
 					<div className='grid grid-cols-1 gap-6'>
 						{(track.extendedPaths || []).map((path, idx) => (
-							// skipcq: JS-0437
 							<VersionPlayer
-								key={`${track.id}-version-${idx}`}
+								key={`${track.id}-version-${idx}`} // skipcq: JS-0437
 								track={track}
 								version={idx}
 							/>
