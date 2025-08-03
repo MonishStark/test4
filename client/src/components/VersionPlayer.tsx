@@ -93,7 +93,6 @@ const VersionPlayer: React.FC<VersionPlayerProps> = ({ track, version }) => {
 			<div className='waveform-container bg-gray-900 rounded-lg'>
 				<div className='waveform'>
 					<div className='waveform-bars flex items-center h-full p-4'>
-						{/* skipcq: JS-0437 */}
 						{Array(150)
 							.fill(0)
 							.map((_, i) => {
@@ -112,6 +111,7 @@ const VersionPlayer: React.FC<VersionPlayerProps> = ({ track, version }) => {
 								const isCurrentlyPlaying = i / 150 <= currentTime / duration;
 								return (
 									<div
+										// skipcq: JS-0437
 										key={`version-${version}-waveform-${i}`}
 										className='waveform-bar transition-colors duration-300'
 										style={{

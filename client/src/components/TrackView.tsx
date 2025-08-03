@@ -318,7 +318,6 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 					<div className='waveform-container bg-gray-900 rounded-lg'>
 						<div className='waveform'>
 							<div className='waveform-bars flex items-center h-full p-4'>
-								{/* skipcq: JS-0437 */}
 								{Array(type === "original" ? 120 : 150)
 									.fill(0)
 									.map((_, i) => {
@@ -333,6 +332,7 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 											currentTime / duration;
 
 										return (
+											// skipcq: JS-0437
 											<div
 												key={`waveform-bar-${i}`}
 												className={
@@ -426,8 +426,8 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 						</div>
 					</div>
 					<div className='grid grid-cols-1 gap-6'>
-						{/* skipcq: JS-0437 */}
 						{(track.extendedPaths || []).map((path, idx) => (
+							// skipcq: JS-0437
 							<VersionPlayer
 								key={`${track.id}-version-${idx}`}
 								track={track}

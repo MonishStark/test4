@@ -237,10 +237,10 @@ const TrackPreview: React.FC<TrackPreviewProps> = ({
 									<div className='waveform-container h-20 bg-gray-900 rounded-lg'>
 										<div className='waveform'>
 											<div className='waveform-bars'>
-												{/* skipcq: JS-0437 */}
 												{Array(120)
 													.fill(0)
 													.map((_, i) => (
+														// skipcq: JS-0437
 														<div
 															key={`original-waveform-${i}`}
 															className='waveform-bar bg-gradient-to-t from-primary to-purple-600'
@@ -262,10 +262,10 @@ const TrackPreview: React.FC<TrackPreviewProps> = ({
 										<div className='waveform'>
 											<div className='waveform-bars'>
 												{" "}
-												{/* skipcq: JS-0437 */}
 												{Array(150)
 													.fill(0)
 													.map((_, i) => (
+														// skipcq: JS-0437
 														<div
 															key={`extended-waveform-${i}`}
 															className='waveform-bar bg-gradient-to-t from-primary to-purple-600'

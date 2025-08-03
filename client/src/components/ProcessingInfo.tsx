@@ -288,9 +288,9 @@ const ProcessingInfo: React.FC<ProcessingInfoProps> = ({
 				<div className='border border-gray-200 rounded-md p-3 bg-gray-50'>
 					<h4 className='font-medium text-sm mb-2'>Processing Steps:</h4>
 					<ul className='space-y-2 text-sm'>
-						{/* skipcq: JS-0437 */}
 						{processingState.steps.map((step, index) => (
 							<li
+								// skipcq: JS-0437
 								key={`step-${step.text}-${index}`}
 								className='flex items-center'>
 								{renderStepIcon(step.status)}
