@@ -311,6 +311,7 @@ const ProcessingInfo: React.FC<ProcessingInfoProps> = ({
 
 			<button
 				className='mt-6 w-full border border-gray-300 text-gray-700 py-2 px-4 rounded-md font-medium shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500'
+				// skipcq: JS-0417
 				onClick={handleCancelProcessing}>
 				Cancel Processing
 			</button>

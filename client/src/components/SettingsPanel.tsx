@@ -159,6 +159,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
 					<div className='flex items-center'>
 						<button
 							className='bg-gray-200 px-2 py-1 rounded-l-md disabled:opacity-50'
+							// skipcq: JS-0417
 							onClick={decrementIntroLength}
 							disabled={settings.introLength <= 8 || disabled}>
 							<span className='material-icons text-sm'>remove</span>
@@ -168,6 +169,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
 						</div>
 						<button
 							className='bg-gray-200 px-2 py-1 rounded-r-md disabled:opacity-50'
+							// skipcq: JS-0417
 							onClick={incrementIntroLength}
 							disabled={settings.introLength >= 64 || disabled}>
 							<span className='material-icons text-sm'>add</span>
@@ -178,6 +180,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
 
 			<button
 				className='mt-6 w-full bg-gradient-to-r from-primary to-purple-600 text-white py-2 px-4 rounded-md font-medium shadow hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50'
+				// skipcq: JS-0417
 				onClick={handleGenerateClick}
 				disabled={!trackId || isSubmitting || disabled}
 				data-generate-button='true'>

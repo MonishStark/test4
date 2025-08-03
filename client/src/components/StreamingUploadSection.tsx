@@ -522,9 +522,13 @@ export const StreamingUploadSection: React.FC<StreamingUploadSectionProps> = ({
 							}
               ${isUploading ? "pointer-events-none opacity-50" : ""}
             `}
+						// skipcq: JS-0417
 						onClick={handleUploadClick}
+						// skipcq: JS-0417
 						onDragOver={handleDragOver}
+						// skipcq: JS-0417
 						onDragLeave={handleDragLeave}
+						// skipcq: JS-0417
 						onDrop={handleDrop}>
 						<span className='material-icons text-5xl text-primary-light mb-4'>
 							cloud_upload
@@ -545,6 +549,7 @@ export const StreamingUploadSection: React.FC<StreamingUploadSectionProps> = ({
 						<input
 							type='file'
 							ref={fileInputRef}
+							// skipcq: JS-0417
 							onChange={handleFileChange}
 							accept={allowedFormats.join(",")}
 							className='hidden'

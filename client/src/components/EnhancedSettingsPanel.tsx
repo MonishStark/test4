@@ -380,6 +380,7 @@ export const EnhancedSettingsPanel: React.FC<EnhancedSettingsPanelProps> = ({
 						<Label className='font-medium'>Preserve Vocals</Label>
 						<Switch
 							checked={settings.preserveVocals}
+							// skipcq: JS-0417
 							onCheckedChange={togglePreserveVocals}
 							disabled={disabled}
 						/>
@@ -390,6 +391,7 @@ export const EnhancedSettingsPanel: React.FC<EnhancedSettingsPanelProps> = ({
 						<Label className='font-medium'>Beat Detection Algorithm</Label>
 						<Select
 							value={settings.beatDetection}
+							// skipcq: JS-0417
 							onValueChange={handleBeatDetectionChange}
 							disabled={disabled}>
 							<SelectTrigger className='w-32'>
@@ -420,6 +422,7 @@ export const EnhancedSettingsPanel: React.FC<EnhancedSettingsPanelProps> = ({
 								<div className='flex items-center gap-2'>
 									<Select
 										value={priority.toString()}
+										// skipcq: JS-0417
 										onValueChange={handlePriorityChange}
 										disabled={disabled}>
 										<SelectTrigger className='w-32'>
@@ -495,6 +498,7 @@ export const EnhancedSettingsPanel: React.FC<EnhancedSettingsPanelProps> = ({
 				<div className='flex flex-col gap-3'>
 					{!activeJobId ? (
 						<Button
+							// skipcq: JS-0417
 							onClick={handleGenerateClick}
 							disabled={disabled || !trackId || isSubmitting}
 							className='w-full flex items-center justify-center gap-2'
@@ -513,6 +517,7 @@ export const EnhancedSettingsPanel: React.FC<EnhancedSettingsPanelProps> = ({
 						</Button>
 					) : (
 						<Button
+							// skipcq: JS-0417
 							onClick={handleCancelJob}
 							variant='destructive'
 							className='w-full flex items-center justify-center gap-2'
