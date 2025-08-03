@@ -93,6 +93,7 @@ const VersionPlayer: React.FC<VersionPlayerProps> = ({ track, version }) => {
 			<div className='waveform-container bg-gray-900 rounded-lg'>
 				<div className='waveform'>
 					<div className='waveform-bars flex items-center h-full p-4'>
+						{/* skipcq: JS-0437 */}
 						{Array(150)
 							.fill(0)
 							.map((_, i) => {

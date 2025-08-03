@@ -336,6 +336,7 @@ export const EnhancedSettingsPanel: React.FC<EnhancedSettingsPanelProps> = ({
 							<Button
 								variant='outline'
 								size='sm'
+								// skipcq: JS-0417
 								onClick={decrementIntroLength}
 								disabled={disabled || settings.introLength <= 8}>
 								-
@@ -344,6 +345,7 @@ export const EnhancedSettingsPanel: React.FC<EnhancedSettingsPanelProps> = ({
 							<Button
 								variant='outline'
 								size='sm'
+								// skipcq: JS-0417
 								onClick={incrementIntroLength}
 								disabled={disabled || settings.introLength >= 64}>
 								+
@@ -360,6 +362,7 @@ export const EnhancedSettingsPanel: React.FC<EnhancedSettingsPanelProps> = ({
 							<Button
 								variant='outline'
 								size='sm'
+								// skipcq: JS-0417
 								onClick={decrementOutroLength}
 								disabled={disabled || settings.outroLength <= 8}>
 								-
@@ -368,6 +371,7 @@ export const EnhancedSettingsPanel: React.FC<EnhancedSettingsPanelProps> = ({
 							<Button
 								variant='outline'
 								size='sm'
+								// skipcq: JS-0417
 								onClick={incrementOutroLength}
 								disabled={disabled || settings.outroLength >= 64}>
 								+

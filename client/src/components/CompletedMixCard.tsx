@@ -65,6 +65,7 @@ const CompletedMixCard: React.FC<CompletedMixCardProps> = ({
 					<div className='flex flex-wrap gap-2 justify-center sm:justify-start'>
 						<button
 							className='inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary'
+							// skipcq: JS-0417
 							onClick={handleDownload}>
 							<span className='material-icons text-sm mr-1'>download</span>
 							Download

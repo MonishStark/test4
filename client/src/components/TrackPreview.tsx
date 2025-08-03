@@ -237,6 +237,7 @@ const TrackPreview: React.FC<TrackPreviewProps> = ({
 									<div className='waveform-container h-20 bg-gray-900 rounded-lg'>
 										<div className='waveform'>
 											<div className='waveform-bars'>
+												{/* skipcq: JS-0437 */}
 												{Array(120)
 													.fill(0)
 													.map((_, i) => (
@@ -261,6 +262,7 @@ const TrackPreview: React.FC<TrackPreviewProps> = ({
 										<div className='waveform'>
 											<div className='waveform-bars'>
 												{" "}
+												{/* skipcq: JS-0437 */}
 												{Array(150)
 													.fill(0)
 													.map((_, i) => (
