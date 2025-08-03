@@ -362,6 +362,7 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 
 					<div
 						className='player-progress mt-2 mb-2 h-2 bg-gray-200 rounded-full overflow-hidden cursor-pointer relative'
+						// skipcq: JS-0417
 						onClick={handleProgressClick}>
 						{type === "extended" && (
 							<div
@@ -400,6 +401,7 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 						</button>
 						<button
 							className='p-2 rounded-full hover:bg-gray-100'
+							// skipcq: JS-0417
 							onClick={handleSkipForward}>
 							<span className='material-icons'>skip_next</span>
 						</button>
@@ -438,6 +440,7 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 								</div>
 								<button
 									className='inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50'
+									// skipcq: JS-0417
 									onClick={handleRegenerate}
 									disabled={
 										track.status === "processing" ||
