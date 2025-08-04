@@ -171,20 +171,19 @@ const VersionPlayer: React.FC<VersionPlayerProps> = ({ track, version }) => {
 				// skipcq: JS-0437, JS-0417
 				onClick={(e) => {
 					if (!audioRef.current) return; // skipcq: JS-0746
-					const rect = e.currentTarget.getBoundingClientRect(); // skipcq: JS-0746
-					const pos = (e.clientX - rect.left) / rect.width; // skipcq: JS-0746
-					const newTime = pos * duration; // skipcq: JS-0746
-					audioRef.current.currentTime = newTime; // skipcq: JS-0746
-					setCurrentTime(newTime); // skipcq: JS-0746
+					const rect = e.currentTarget.getBoundingClientRect();
+					const pos = (e.clientX - rect.left) / rect.width;
+					const newTime = pos * duration;
+					audioRef.current.currentTime = newTime;
+					setCurrentTime(newTime);
 				}}
-				onKeyDown={handleProgressKeyDown} // Accessibility: keyboard support
+				onKeyDown={handleProgressKeyDown} // skipcq: JS-0417
 				tabIndex={0} // Make focusable for keyboard navigation
-				role="slider" // Semantic role for screen readers
-				aria-label="Audio progress"
+				role='slider' // Semantic role for screen readers
+				aria-label='Audio progress'
 				aria-valuemin={0}
 				aria-valuemax={duration}
-				aria-valuenow={currentTime}
-			>
+				aria-valuenow={currentTime}>
 				<div
 					className='h-full bg-gradient-to-r from-purple-600 to-purple-400 transition-all duration-300'
 					style={{

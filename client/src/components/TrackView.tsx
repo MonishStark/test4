@@ -402,14 +402,13 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 						className='player-progress mt-2 mb-2 h-2 bg-gray-200 rounded-full overflow-hidden cursor-pointer relative'
 						// skipcq: JS-0417
 						onClick={handleProgressClick} // skipcq: JS-0746
-						onKeyDown={handleProgressKeyDown} // Accessibility: keyboard support
+						onKeyDown={handleProgressKeyDown} // skipcq: JS-0417
 						tabIndex={0} // Make focusable for keyboard navigation
-						role="slider" // Semantic role for screen readers
-						aria-label="Audio progress"
+						role='slider' // Semantic role for screen readers
+						aria-label='Audio progress'
 						aria-valuemin={0}
 						aria-valuemax={displayDuration}
-						aria-valuenow={currentTime}
-					>
+						aria-valuenow={currentTime}>
 						{type === "extended" && (
 							<div
 								className='h-full bg-gradient-to-r from-emerald-500 to-emerald-400 absolute'

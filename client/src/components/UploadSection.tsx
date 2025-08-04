@@ -209,14 +209,13 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onUploadSuccess }) => {
 					isDragActive ? "active" : ""
 				} ${isUploading ? "opacity-50 pointer-events-none" : ""}`}
 				onClick={handleUploadClick} // skipcq: JS-0417, JS-0746
-				onKeyDown={handleKeyDown} // Accessibility: keyboard support
+				onKeyDown={handleKeyDown} // skipcq: JS-0417
 				onDragOver={handleDragOver} // skipcq: JS-0417, JS-0746
 				onDragLeave={handleDragLeave} // skipcq: JS-0417, JS-0746
 				onDrop={handleDrop} // skipcq: JS-0417, JS-0746
 				tabIndex={0} // Make focusable for keyboard navigation
-				role="button" // Semantic role for screen readers
-				aria-label="Upload audio file by clicking or dragging and dropping"
-			>
+				role='button' // Semantic role for screen readers
+				aria-label='Upload audio file by clicking or dragging and dropping'>
 				{" "}
 				{/* Conditional rendering based on upload state */}
 				{isUploading ? (
