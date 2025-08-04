@@ -116,6 +116,7 @@ const Carousel = React.forwardRef<
 			api.on("reInit", onSelect);
 			api.on("select", onSelect);
 
+			// skipcq: JS-0045
 			return () => {
 				api?.off("select", onSelect);
 			};

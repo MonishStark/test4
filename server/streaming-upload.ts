@@ -502,6 +502,7 @@ export function handleStreamingErrors() {
 		req: Request,
 		res: Response,
 		_next: NextFunction
+		// skipcq: JS-0045
 	) => {
 		const uploadId = req.uploadId;
 

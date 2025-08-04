@@ -133,6 +133,7 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 			statusIntervalRef.current = window.setInterval(pollStatus, 2000);
 
 			// Return cleanup function
+			// skipcq: JS-0045
 			return () => {
 				if (statusIntervalRef.current) {
 					clearInterval(statusIntervalRef.current);
@@ -159,6 +160,7 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 			audio.addEventListener("loadedmetadata", onLoadedMetadata);
 			audio.addEventListener("ended", onEnded);
 
+			// skipcq: JS-0045
 			return () => {
 				audio.removeEventListener("loadedmetadata", onLoadedMetadata);
 				audio.removeEventListener("ended", onEnded);

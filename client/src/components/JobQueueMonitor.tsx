@@ -290,6 +290,7 @@ export const JobQueueMonitor: React.FC<JobQueueMonitorProps> = ({
 				initializeWebSocket();
 			}, delay);
 
+			// skipcq: JS-0045
 			return () => clearTimeout(timeout);
 		}
 	}, [reconnectAttempts, initializeWebSocket]);

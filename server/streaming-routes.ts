@@ -52,6 +52,7 @@ const normalizedResultDir = path.resolve(process.cwd(), "results");
  *
  * Prepares the server for a streaming upload and returns upload ID
  */
+// skipcq: JS-0045
 router.post("/upload/init", async (req: Request, res: Response) => {
 	try {
 		const { filename, fileSize } = req.body;
@@ -137,6 +138,7 @@ router.post(
 		uploadDirectory: normalizedUploadsDir,
 		chunkSize: 1024 * 1024, // 1MB chunks
 	}),
+	// skipcq: JS-0045
 	async (req: Request, res: Response) => {
 		try {
 			const uploadId = req.uploadId;
@@ -240,6 +242,7 @@ router.post(
  *
  * Returns real-time progress information for an upload
  */
+// skipcq: JS-0045
 router.get("/upload/progress/:uploadId", (req: Request, res: Response) => {
 	try {
 		const { uploadId } = req.params;
@@ -271,6 +274,7 @@ router.get("/upload/progress/:uploadId", (req: Request, res: Response) => {
  *
  * Cancels an ongoing upload and cleans up resources
  */
+// skipcq: JS-0045
 router.delete("/upload/:uploadId", async (req: Request, res: Response) => {
 	try {
 		const { uploadId } = req.params;

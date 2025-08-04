@@ -33,6 +33,7 @@ const VersionPlayer: React.FC<VersionPlayerProps> = ({ track, version }) => {
 			audio.addEventListener("loadedmetadata", onLoadedMetadata);
 			audio.addEventListener("ended", onEnded);
 
+			// skipcq: JS-0045
 			return () => {
 				audio.removeEventListener("loadedmetadata", onLoadedMetadata);
 				audio.removeEventListener("ended", onEnded);

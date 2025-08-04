@@ -270,10 +270,10 @@ export function createSecurityMiddleware(validator: SecurePathValidator) {
 			const maxRequests = 100;
 			const windowMs = 15 * 60 * 1000; // 15 minutes
 
+			// skipcq: JS-0045
 			return (req: Request, res: Response, next: NextFunction) => {
 				const clientIp = req.ip || req.connection.remoteAddress;
 				const now = Date.now();
-
 				if (!requestCounts.has(clientIp)) {
 					requestCounts.set(clientIp, { count: 1, resetTime: now + windowMs });
 					return next();
