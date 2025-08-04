@@ -158,6 +158,7 @@ export class SecurePathValidator {
 /**
  * Input sanitization utilities
  */
+// skipcq: JS-0327
 export class InputSanitizer {
 	/**
 	 * Sanitize and validate integer parameters

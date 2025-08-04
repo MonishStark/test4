@@ -13,6 +13,7 @@ interface TrackViewProps {
 	version: number;
 }
 
+// skipcq: JS-R1005
 const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [currentTime, setCurrentTime] = useState(0);

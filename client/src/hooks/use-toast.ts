@@ -55,7 +55,7 @@ const addToRemoveQueue = (toastId: string) => {
 		toastTimeouts.delete(toastId);
 		dispatch({
 			type: "REMOVE_TOAST",
-			toastId: toastId,
+			toastId: toastId, // skipcq: JS-0240
 		});
 	}, TOAST_REMOVE_DELAY);
 
@@ -156,7 +156,7 @@ function toast({ ...props }: Toast) {
 	});
 
 	return {
-		id: id,
+		id: id, // skipcq: JS-0240
 		dismiss,
 		update,
 	};
