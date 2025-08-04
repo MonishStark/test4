@@ -42,6 +42,14 @@ interface UploadProgress {
 	estimatedTimeRemaining: number; // seconds
 }
 
+interface AudioMetadata {
+	duration: number;
+	bitrate: number;
+	bpm: number;
+	key: string;
+	format: string;
+}
+
 interface StreamingUploadResult {
 	uploadId: string;
 	filename: string;
@@ -49,7 +57,7 @@ interface StreamingUploadResult {
 	size: number;
 	mimetype: string;
 	duration?: number;
-	metadata?: any;
+	metadata?: AudioMetadata;
 }
 
 interface StreamingUploadError extends Error {
@@ -366,7 +374,9 @@ export class AudioFileStreamProcessor {
 	 * Extract metadata using existing Python analysis pipeline
 	 * Integrates with utils.py for consistent audio analysis
 	 */
-	private async extractMetadataStreaming(filePath: string): Promise<any> {
+	private async extractMetadataStreaming(
+		filePath: string
+	): Promise<AudioMetadata> {
 		return new Promise((resolve, reject) => {
 			const options = {
 				mode: "text" as const,

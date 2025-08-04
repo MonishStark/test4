@@ -27,6 +27,18 @@ import {
 } from "./streaming-upload.js";
 import { storage } from "./storage.js";
 
+// Interface for active upload summary
+interface ActiveUploadSummary {
+	uploadId: string;
+	filename: string;
+	percentage: number;
+	status: "uploading" | "processing";
+	bytesReceived: number;
+	totalBytes: number;
+	speed: number;
+	estimatedTimeRemaining: number;
+}
+
 const router = Router();
 const streamProcessor = new AudioFileStreamProcessor();
 
@@ -305,7 +317,7 @@ router.delete("/upload/:uploadId", async (req: Request, res: Response) => {
 router.get("/upload/active", (req: Request, res: Response) => {
 	try {
 		// In production, add authentication/authorization here
-		const activeUploads: any[] = [];
+		const activeUploads: ActiveUploadSummary[] = [];
 
 		// Get all active uploads (in production, this should be paginated)
 		uploadProgress.forEach((progress, _uploadId) => {

@@ -21,6 +21,15 @@ import { processingSettingsSchema } from "@shared/schema";
 import { InputSanitizer } from "./security-utils.js";
 import path from "path";
 
+// Interface for queue statistics
+interface QueueStats {
+	waiting: number;
+	active: number;
+	completed: number;
+	failed: number;
+	total: number;
+}
+
 /**
  * Enhanced route handlers with job queue integration
  */
@@ -220,20 +229,20 @@ export function setupJobQueueRoutes(app: Express) {
 				timestamp: new Date().toISOString(),
 				queues: stats,
 				summary: {
-					totalJobs: Object.values(stats).reduce(
-						(sum: number, queue: any) => sum + queue.total,
+					totalJobs: (Object.values(stats) as QueueStats[]).reduce(
+						(sum: number, queue: QueueStats) => sum + queue.total,
 						0
 					),
-					activeJobs: Object.values(stats).reduce(
-						(sum: number, queue: any) => sum + queue.active,
+					activeJobs: (Object.values(stats) as QueueStats[]).reduce(
+						(sum: number, queue: QueueStats) => sum + queue.active,
 						0
 					),
-					waitingJobs: Object.values(stats).reduce(
-						(sum: number, queue: any) => sum + queue.waiting,
+					waitingJobs: (Object.values(stats) as QueueStats[]).reduce(
+						(sum: number, queue: QueueStats) => sum + queue.waiting,
 						0
 					),
-					failedJobs: Object.values(stats).reduce(
-						(sum: number, queue: any) => sum + queue.failed,
+					failedJobs: (Object.values(stats) as QueueStats[]).reduce(
+						(sum: number, queue: QueueStats) => sum + queue.failed,
 						0
 					),
 				},
@@ -462,16 +471,16 @@ export function setupJobQueueRoutes(app: Express) {
 			const stats = await jobQueueManager.getQueueStats();
 
 			// Calculate health metrics
-			const totalJobs = Object.values(stats).reduce(
-				(sum: number, queue: any) => sum + queue.total,
+			const totalJobs = (Object.values(stats) as QueueStats[]).reduce(
+				(sum: number, queue: QueueStats) => sum + queue.total,
 				0
 			);
-			const failedJobs = Object.values(stats).reduce(
-				(sum: number, queue: any) => sum + queue.failed,
+			const failedJobs = (Object.values(stats) as QueueStats[]).reduce(
+				(sum: number, queue: QueueStats) => sum + queue.failed,
 				0
 			);
-			const activeJobs = Object.values(stats).reduce(
-				(sum: number, queue: any) => sum + queue.active,
+			const activeJobs = (Object.values(stats) as QueueStats[]).reduce(
+				(sum: number, queue: QueueStats) => sum + queue.active,
 				0
 			);
 
