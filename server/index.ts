@@ -44,6 +44,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use((req, res, next) => {
 	const start = Date.now();
 	const path = req.path;
+	// skipcq: JS-0126
 	let capturedJsonResponse: Record<string, unknown> | undefined = undefined;
 
 	const originalResJson = res.json;

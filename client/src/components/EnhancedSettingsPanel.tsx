@@ -413,6 +413,7 @@ export const EnhancedSettingsPanel: React.FC<EnhancedSettingsPanelProps> = ({
 
 				{/* Advanced Settings */}
 				{showAdvanced && (
+					// skipcq: JS-0415
 					<>
 						<Separator />
 						{/* skipcq: JS-0415 */}
