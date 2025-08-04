@@ -52,6 +52,12 @@ interface StreamingUploadResult {
 	metadata?: any;
 }
 
+interface StreamingUploadError extends Error {
+	code?: string;
+	field?: string;
+	storageErrors?: any[];
+}
+
 /**
  * Default configuration for streaming uploads
  * Optimized for audio files with reasonable limits
@@ -470,7 +476,12 @@ export class AudioFileStreamProcessor {
  * Enhanced error handling for streaming uploads
  */
 export function handleStreamingErrors() {
-	return (error: any, req: Request, res: Response, _next: NextFunction) => {
+	return (
+		error: StreamingUploadError,
+		req: Request,
+		res: Response,
+		_next: NextFunction
+	) => {
 		const uploadId = req.uploadId;
 
 		if (uploadId) {

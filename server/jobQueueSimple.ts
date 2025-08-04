@@ -85,14 +85,36 @@ export interface PythonScriptResult {
 	stderr: string;
 }
 
+export interface ActiveJob extends AudioProcessingJobData {
+	status: JobStatus;
+	progress?: JobProgress;
+	error?: string;
+	createdAt?: number;
+}
+
+export interface JobUpdateData {
+	jobId: string;
+	trackId: number;
+	userId: number;
+	status: JobStatus;
+	progress?: JobProgress;
+	timestamp: string;
+}
+
+export interface SocketIO {
+	to: (room: string) => {
+		emit: (event: string, data: JobUpdateData) => void;
+	};
+}
+
 /**
  * Simplified Job Queue Manager (Development/Fallback Mode)
  *
  * Processes jobs directly without Redis queue for development purposes.
  */
 class SimpleJobQueueManager {
-	private activeJobs: Map<string, any> = new Map();
-	private socketIo?: any;
+	private activeJobs: Map<string, ActiveJob> = new Map();
+	private socketIo?: SocketIO;
 
 	constructor() {
 		console.log(
@@ -100,7 +122,7 @@ class SimpleJobQueueManager {
 		);
 	}
 
-	setSocketIo(io: any) {
+	setSocketIo(io: SocketIO) {
 		this.socketIo = io;
 	}
 
@@ -176,7 +198,15 @@ class SimpleJobQueueManager {
 		const updateProgress = (progress: Partial<JobProgress>) => {
 			const job = this.activeJobs.get(data.jobId);
 			if (job) {
-				job.progress = { ...job.progress, ...progress };
+				job.progress = {
+					percentage: 0,
+					stage: "",
+					message: "",
+					currentStep: 1,
+					totalSteps: 1,
+					...job.progress,
+					...progress,
+				};
 
 				// Emit progress via WebSocket if available
 				if (this.socketIo) {
