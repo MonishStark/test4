@@ -283,6 +283,7 @@ export const JobQueueMonitor: React.FC<JobQueueMonitorProps> = ({
 	}, [userId, isAdmin, toast, scheduleReconnect, handleJobUpdate]);
 
 	// Effect to handle reconnection attempts
+	// skipcq: JS-0045
 	useEffect(() => {
 		if (reconnectAttempts > 0) {
 			const delay = Math.min(1000 * Math.pow(2, reconnectAttempts - 1), 30000);

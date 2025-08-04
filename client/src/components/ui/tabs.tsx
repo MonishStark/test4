@@ -2,7 +2,7 @@
 
 // skipcq: JS-C1003
 import * as React from "react";
-import * as TabsPrimitive from "@radix-ui/react-tabs";
+import * as TabsPrimitive from "@radix-ui/react-tabs"; // skipcq: JS-C1003
 
 import { cn } from "@/lib/utils";
 

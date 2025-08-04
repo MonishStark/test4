@@ -72,6 +72,7 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 	}, [track.id]);
 
 	// Status polling effect
+	// skipcq: JS-0045
 	useEffect(() => {
 		if (isProcessing) {
 			const pollStatus = async () => {

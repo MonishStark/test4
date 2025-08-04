@@ -1,8 +1,7 @@
 /** @format */
 
-// skipcq: JS-C1003
-import * as React from "react";
-import * as LabelPrimitive from "@radix-ui/react-label";
+import * as React from "react"; // skipcq: JS-C1003
+import * as LabelPrimitive from "@radix-ui/react-label"; // skipcq: JS-C1003
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";

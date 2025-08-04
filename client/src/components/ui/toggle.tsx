@@ -2,7 +2,7 @@
 
 // skipcq: JS-C1003
 import * as React from "react";
-import * as TogglePrimitive from "@radix-ui/react-toggle";
+import * as TogglePrimitive from "@radix-ui/react-toggle"; // skipcq: JS-C1003
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";

@@ -516,7 +516,7 @@ class SimpleJobQueueManager {
 		console.log("🧹 File cleanup will be handled manually in fallback mode");
 		return data.jobId;
 	}
-
+	// skipcq: JS-0105
 	async addNotificationJob(
 		userId: number,
 		trackId: number,

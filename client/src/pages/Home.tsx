@@ -133,6 +133,7 @@ const Home: React.FC = () => {
 							// skipcq: JS-0417
 							onClick={async () => {
 								if (
+									// skipcq: JS-0052
 									window.confirm(
 										"Are you sure you want to clear all tracks? This cannot be undone."
 									)

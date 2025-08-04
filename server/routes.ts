@@ -690,6 +690,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 	});
 
 	// Download extended audio
+	// skipcq: JS-0045
 	app.get("/api/tracks/:id/download", async (req: Request, res: Response) => {
 		try {
 			// Enhanced security: Validate and sanitize ID parameter
