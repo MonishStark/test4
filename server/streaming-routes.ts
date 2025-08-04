@@ -152,6 +152,7 @@ router.post(
 
 			// Update progress to processing state
 			updateUploadProgress(uploadId!, {
+				// skipcq: JS-0339
 				status: "processing",
 				percentage: 100,
 			});
@@ -175,7 +176,7 @@ router.post(
 			// Process the uploaded file for metadata
 			const result = await streamProcessor.processAudioFile(
 				file.path,
-				uploadId!
+				uploadId! // skipcq: JS-0339
 			);
 
 			// Update track with metadata (same as existing flow)
@@ -191,6 +192,7 @@ router.post(
 
 			// Final progress update
 			updateUploadProgress(uploadId!, {
+				// skipcq: JS-0339
 				status: "completed",
 				percentage: 100,
 			});

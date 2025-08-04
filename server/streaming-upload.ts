@@ -60,10 +60,18 @@ interface StreamingUploadResult {
 	metadata?: AudioMetadata;
 }
 
+interface StorageError {
+	operation: string;
+	path?: string;
+	message: string;
+	code?: string;
+	timestamp: number;
+}
+
 interface StreamingUploadError extends Error {
 	code?: string;
 	field?: string;
-	storageErrors?: any[];
+	storageErrors?: StorageError[];
 }
 
 /**
