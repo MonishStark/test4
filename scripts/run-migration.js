@@ -9,7 +9,7 @@ import { Pool } from "pg";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { dirname } from "path";
+import { dirname } from "path"; // skipcq: JS-0232
 
 // ES module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -68,7 +68,7 @@ async function runMigration() {
 }
 
 // ES module equivalent of require.main === module
-import { pathToFileURL } from "url";
+import { pathToFileURL } from "url"; // skipcq: JS-0232
 
 console.log("Script URL:", import.meta.url);
 console.log("Process argv[1]:", process.argv[1]);

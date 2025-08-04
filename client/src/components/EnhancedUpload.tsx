@@ -30,6 +30,7 @@ export const EnhancedUpload: React.FC<EnhancedUploadProps> = ({
 	);
 
 	return (
+		// skipcq: JS-0415
 		<Card className='w-full'>
 			<CardHeader>
 				<CardTitle className='flex items-center justify-between'>

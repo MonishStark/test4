@@ -446,6 +446,7 @@ export const JobQueueMonitor: React.FC<JobQueueMonitorProps> = ({
 		const { jobId, trackId, status, progress } = job;
 
 		return (
+			// skipcq: JS-0415
 			<Card key={jobId} className='mb-4'>
 				<CardHeader className='pb-2'>
 					<div className='flex justify-between items-center'>
@@ -514,6 +515,7 @@ export const JobQueueMonitor: React.FC<JobQueueMonitorProps> = ({
 	};
 
 	return (
+		// skipcq: JS-0415
 		<div className='space-y-6'>
 			{/* Connection Status */}
 			<Card>

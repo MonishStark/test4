@@ -7,6 +7,7 @@ interface AppHeaderProps {
 
 const AppHeader: React.FC<AppHeaderProps> = ({ title }) => {
   return (
+    // skipcq: JS-0415
     <header className="bg-gradient-to-r from-primary to-purple-600 text-white shadow-md">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center">

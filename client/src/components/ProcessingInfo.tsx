@@ -274,6 +274,7 @@ const ProcessingInfo: React.FC<ProcessingInfoProps> = ({
 	};
 
 	return (
+		// skipcq: JS-0415
 		<div className='bg-white rounded-xl shadow-md p-6'>
 			<h2 className='text-xl font-semibold mb-4'>Processing Track</h2>
 

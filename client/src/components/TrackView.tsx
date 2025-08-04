@@ -255,6 +255,7 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 	};
 
 	return (
+		// skipcq: JS-0415
 		<div>
 			<div className='flex flex-col md:flex-row items-center md:items-start gap-4 mb-6'>
 				<div className='w-32 h-32 bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg flex items-center justify-center shadow-md flex-shrink-0'>

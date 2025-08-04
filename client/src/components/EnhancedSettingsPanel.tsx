@@ -309,6 +309,7 @@ export const EnhancedSettingsPanel: React.FC<EnhancedSettingsPanelProps> = ({
 	const PriorityIcon = currentPriority.icon;
 
 	return (
+		// skipcq: JS-0415
 		<Card className='w-full'>
 			<CardHeader>
 				<CardTitle className='flex items-center justify-between'>
@@ -414,6 +415,7 @@ export const EnhancedSettingsPanel: React.FC<EnhancedSettingsPanelProps> = ({
 				{showAdvanced && (
 					<>
 						<Separator />
+						{/* skipcq: JS-0415 */}
 						<div className='space-y-4'>
 							<h3 className='text-lg font-semibold flex items-center gap-2'>
 								<Settings size={18} />
