@@ -22,7 +22,7 @@ function sanitizeForLog(input) {
 	// Remove newlines, carriage returns, and control characters that could be used for log injection
 	return input
 		.replace(/[\r\n\t]/g, "")
-		.replace(/[^\x20-\x7E]/g, "") // Keep only printable ASCII characters
+		.replace(/[^\x20-\x7E]/g, "") // skipcq: JS-0441 - Keep only printable ASCII characters for security
 		.substring(0, 1000);
 }
 

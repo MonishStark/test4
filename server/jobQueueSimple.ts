@@ -19,7 +19,7 @@ function sanitizeForLog(data: any): string {
 		// Remove format specifiers and control characters that could manipulate log output
 		return data
 			.replace(/%[sdifj%]/g, "") // Remove format specifiers
-			.replace(/[^\x20-\x7E]/g, "") // Keep only printable ASCII characters
+			.replace(/[^\x20-\x7E]/g, "") // skipcq: JS-0441 - Keep only printable ASCII characters for security
 			.slice(0, 1000); // Limit length
 	}
 	return String(data).slice(0, 1000);
