@@ -40,11 +40,13 @@ export interface IStorage {
 }
 
 export class PostgresStorage implements IStorage {
+	// skipcq: JS-0105
 	async getUser(id: number): Promise<User | undefined> {
 		const result = await db.select().from(users).where(eq(users.id, id));
 		return result[0];
 	}
 
+	// skipcq: JS-0105
 	async getUserByUsername(username: string): Promise<User | undefined> {
 		const result = await db
 			.select()
@@ -53,11 +55,13 @@ export class PostgresStorage implements IStorage {
 		return result[0];
 	}
 
+	// skipcq: JS-0105
 	async createUser(insertUser: InsertUser): Promise<User> {
 		const result = await db.insert(users).values(insertUser).returning();
 		return result[0];
 	}
 
+	// skipcq: JS-0105
 	async getAudioTrack(id: number): Promise<AudioTrack | undefined> {
 		const result = await db
 			.select()
@@ -66,6 +70,7 @@ export class PostgresStorage implements IStorage {
 		return result[0];
 	}
 
+	// skipcq: JS-0105
 	async createAudioTrack(
 		insertAudioTrack: InsertAudioTrack
 	): Promise<AudioTrack> {
@@ -76,6 +81,7 @@ export class PostgresStorage implements IStorage {
 		return result[0];
 	}
 
+	// skipcq: JS-0105
 	async updateAudioTrack(
 		id: number,
 		updateAudioTrack: UpdateAudioTrack
@@ -88,6 +94,7 @@ export class PostgresStorage implements IStorage {
 		return result[0];
 	}
 
+	// skipcq: JS-0105
 	async getAudioTracksByUserId(userId: number): Promise<AudioTrack[]> {
 		return await db
 			.select()
@@ -96,10 +103,12 @@ export class PostgresStorage implements IStorage {
 			.orderBy(desc(audioTracks.id));
 	}
 
+	// skipcq: JS-0105
 	async deleteAudioTrack(id: number): Promise<void> {
 		await db.delete(audioTracks).where(eq(audioTracks.id, id));
 	}
 
+	// skipcq: JS-0105
 	async deleteAllUserTracks(userId: number): Promise<void> {
 		await db.delete(audioTracks).where(eq(audioTracks.userId, userId));
 	}

@@ -382,6 +382,7 @@ export class AudioFileStreamProcessor {
 	 * Extract metadata using existing Python analysis pipeline
 	 * Integrates with utils.py for consistent audio analysis
 	 */
+	// skipcq: JS-0105
 	private async extractMetadataStreaming(
 		filePath: string
 	): Promise<AudioMetadata> {
@@ -436,6 +437,7 @@ export class AudioFileStreamProcessor {
 	/**
 	 * Get MIME type from file extension
 	 */
+	// skipcq: JS-0105
 	private getMimeType(ext: string): string {
 		const mimeTypes: Record<string, string> = {
 			".mp3": "audio/mpeg",
@@ -480,6 +482,7 @@ export class AudioFileStreamProcessor {
 	/**
 	 * Clean up temporary files
 	 */
+	// skipcq: JS-0105
 	async cleanup(filePath: string): Promise<void> {
 		try {
 			await fs.unlink(filePath);

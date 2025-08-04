@@ -333,6 +333,7 @@ export class WebSocketManager {
 	/**
 	 * Send queue statistics to a specific socket
 	 */
+	// skipcq: JS-0105
 	private async sendQueueStatsToSocket(socket: Socket) {
 		try {
 			const stats = await jobQueueManager.getQueueStats();

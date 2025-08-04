@@ -336,6 +336,7 @@ class SimpleJobQueueManager {
 	/**
 	 * Run Python script for audio processing
 	 */
+	// skipcq: JS-0105
 	private async runPythonScript(
 		scriptPath: string,
 		data: AudioProcessingJobData,
@@ -504,11 +505,13 @@ class SimpleJobQueueManager {
 	}
 
 	// Placeholder methods for compatibility
+	// skipcq: JS-0105
 	async addAudioAnalysisJob(data: AudioAnalysisJobData): Promise<string> {
 		console.log("📊 Audio analysis not available in fallback mode");
 		return data.jobId;
 	}
 
+	// skipcq: JS-0105
 	async addFileCleanupJob(data: FileCleanupJobData): Promise<string> {
 		console.log("🧹 File cleanup will be handled manually in fallback mode");
 		return data.jobId;
@@ -524,10 +527,12 @@ class SimpleJobQueueManager {
 		return "notification-" + Date.now();
 	}
 
+	// skipcq: JS-0105
 	async pauseAllQueues(): Promise<void> {
 		console.log("⏸️ Queue pause not available in fallback mode");
 	}
 
+	// skipcq: JS-0105
 	async resumeAllQueues(): Promise<void> {
 		console.log("▶️ Queue resume not available in fallback mode");
 	}

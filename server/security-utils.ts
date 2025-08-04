@@ -114,6 +114,7 @@ export class SecurePathValidator {
 	/**
 	 * Secure filename sanitization
 	 */
+	// skipcq: JS-0105
 	sanitizeFilename(filename: string): string {
 		if (!filename || typeof filename !== "string") {
 			throw new Error("Invalid filename input");
@@ -131,6 +132,7 @@ export class SecurePathValidator {
 	/**
 	 * Validate file extension against allowlist
 	 */
+	// skipcq: JS-0105
 	validateFileExtension(
 		filename: string,
 		allowedExtensions: string[]
@@ -142,6 +144,7 @@ export class SecurePathValidator {
 	/**
 	 * Check if directory is writable
 	 */
+	// skipcq: JS-0105
 	private isDirectoryWritable(dirPath: string): boolean {
 		try {
 			fs.accessSync(dirPath, fs.constants.W_OK);
