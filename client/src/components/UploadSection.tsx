@@ -200,9 +200,9 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onUploadSuccess }) => {
 				onClick={handleUploadClick} // skipcq: JS-0417, JS-0746
 				onDragOver={handleDragOver} // skipcq: JS-0417, JS-0746
 				onDragLeave={handleDragLeave} // skipcq: JS-0417, JS-0746
-				onDrop={handleDrop}>
+				onDrop={handleDrop} // skipcq: JS-0417, JS-0746
+			>
 				{" "}
-				// skipcq: JS-0417, JS-0746
 				{/* Conditional rendering based on upload state */}
 				{isUploading ? (
 					// Upload progress state with animated feedback

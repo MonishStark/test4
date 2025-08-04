@@ -132,6 +132,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
 			// Notify parent component that processing has begun
 			onProcessingStart();
 		} catch (error) {
+			// skipcq: JS-0002
 			console.error("Processing error:", error);
 
 			// Show error notification with descriptive message
