@@ -92,11 +92,12 @@ export const securityHeaders = (
 };
 
 // Request size validation
-// skipcq: JS-0045
+
 export const validateRequestSize = (
 	req: Request,
 	res: Response,
 	next: NextFunction
+	// skipcq: JS-0045
 ) => {
 	const contentLength = req.get("Content-Length");
 	const maxSize = parseInt(process.env.MAX_FILE_SIZE || "104857600", 10); // 100MB default
@@ -112,11 +113,12 @@ export const validateRequestSize = (
 };
 
 // Origin validation middleware (additional layer beyond CORS)
-// skipcq: JS-0045
+
 export const validateOrigin = (
 	req: Request,
 	res: Response,
 	next: NextFunction
+	// skipcq: JS-0045
 ) => {
 	const origin = req.get("Origin");
 	const referer = req.get("Referer");
@@ -178,6 +180,7 @@ export const securityErrorHandler = (
 	req: Request,
 	res: Response,
 	next: NextFunction
+	// skipcq: JS-0045
 ) => {
 	// Don't expose internal error details in production
 	if (process.env.NODE_ENV === "production") {

@@ -48,6 +48,7 @@ const getAllowedOrigins = (): string[] => {
 const corsOrigin = (
 	origin: string | undefined,
 	callback: (err: Error | null, allow?: boolean) => void
+	// skipcq: JS-0045
 ) => {
 	const allowedOrigins = getAllowedOrigins();
 
