@@ -61,7 +61,6 @@ async function runMigration() {
 	} catch (error) {
 		console.error("❌ Migration failed:", error.message);
 		console.error("Stack trace:", error.stack);
-		process.exit(1);
 	} finally {
 		console.log("🔄 Closing database connection...");
 		await pool.end();

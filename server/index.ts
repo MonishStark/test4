@@ -207,7 +207,6 @@ app.use((req, res, next) => {
 					error instanceof Error ? error.message : "Unknown error"
 				}`
 			);
-			process.exit(1);
 		}
 	});
 
@@ -226,7 +225,6 @@ app.use((req, res, next) => {
 					error instanceof Error ? error.message : "Unknown error"
 				}`
 			);
-			process.exit(1);
 		}
 	});
 })();

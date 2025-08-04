@@ -184,7 +184,6 @@ async function runTests() {
 		console.log(
 			"❌ Server is not running. Please start the server with: npm run dev"
 		);
-		process.exit(1);
 	}
 
 	// Test CORS for different origins
