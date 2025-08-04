@@ -276,7 +276,7 @@ export function createSecurityMiddleware(validator: SecurePathValidator) {
 					return next();
 				}
 
-				const clientData = requestCounts.get(clientIp)!;
+				const clientData = requestCounts.get(clientIp)!; // skipcq: JS-0339
 
 				if (now > clientData.resetTime) {
 					clientData.count = 1;
