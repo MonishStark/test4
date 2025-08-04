@@ -221,6 +221,38 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 		setCurrentTime(newTime);
 	};
 
+	/**
+	 * Handles keyboard events for progress bar accessibility
+	 * Left/Right arrows and Home/End keys for seeking
+	 */
+	const handleProgressKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+		if (!audioRef.current || !duration) return;
+
+		let newTime = currentTime;
+		const seekStep = duration * 0.05; // 5% of total duration
+
+		switch (e.key) {
+			case "ArrowLeft":
+				newTime = Math.max(0, currentTime - seekStep);
+				break;
+			case "ArrowRight":
+				newTime = Math.min(duration, currentTime + seekStep);
+				break;
+			case "Home":
+				newTime = 0;
+				break;
+			case "End":
+				newTime = duration;
+				break;
+			default:
+				return; // Don't prevent default for other keys
+		}
+
+		e.preventDefault();
+		audioRef.current.currentTime = newTime;
+		setCurrentTime(newTime);
+	};
+
 	const handleRegenerate = async () => {
 		try {
 			setIsProcessing(true);
@@ -370,6 +402,13 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 						className='player-progress mt-2 mb-2 h-2 bg-gray-200 rounded-full overflow-hidden cursor-pointer relative'
 						// skipcq: JS-0417
 						onClick={handleProgressClick} // skipcq: JS-0746
+						onKeyDown={handleProgressKeyDown} // Accessibility: keyboard support
+						tabIndex={0} // Make focusable for keyboard navigation
+						role="slider" // Semantic role for screen readers
+						aria-label="Audio progress"
+						aria-valuemin={0}
+						aria-valuemax={displayDuration}
+						aria-valuenow={currentTime}
 					>
 						{type === "extended" && (
 							<div

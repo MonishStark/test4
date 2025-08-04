@@ -79,6 +79,38 @@ const VersionPlayer: React.FC<VersionPlayerProps> = ({ track, version }) => {
 		setCurrentTime(audioRef.current.currentTime);
 	};
 
+	/**
+	 * Handles keyboard events for progress bar accessibility
+	 * Left/Right arrows and Home/End keys for seeking
+	 */
+	const handleProgressKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+		if (!audioRef.current || !duration) return;
+
+		let newTime = currentTime;
+		const seekStep = duration * 0.05; // 5% of total duration
+
+		switch (e.key) {
+			case "ArrowLeft":
+				newTime = Math.max(0, currentTime - seekStep);
+				break;
+			case "ArrowRight":
+				newTime = Math.min(duration, currentTime + seekStep);
+				break;
+			case "Home":
+				newTime = 0;
+				break;
+			case "End":
+				newTime = duration;
+				break;
+			default:
+				return; // Don't prevent default for other keys
+		}
+
+		e.preventDefault();
+		audioRef.current.currentTime = newTime;
+		setCurrentTime(newTime);
+	};
+
 	return (
 		<div className='bg-gray-50 rounded-lg p-4 mb-4'>
 			<div className='flex justify-between items-center mb-4'>
@@ -144,7 +176,15 @@ const VersionPlayer: React.FC<VersionPlayerProps> = ({ track, version }) => {
 					const newTime = pos * duration; // skipcq: JS-0746
 					audioRef.current.currentTime = newTime; // skipcq: JS-0746
 					setCurrentTime(newTime); // skipcq: JS-0746
-				}}>
+				}}
+				onKeyDown={handleProgressKeyDown} // Accessibility: keyboard support
+				tabIndex={0} // Make focusable for keyboard navigation
+				role="slider" // Semantic role for screen readers
+				aria-label="Audio progress"
+				aria-valuemin={0}
+				aria-valuemax={duration}
+				aria-valuenow={currentTime}
+			>
 				<div
 					className='h-full bg-gradient-to-r from-purple-600 to-purple-400 transition-all duration-300'
 					style={{
