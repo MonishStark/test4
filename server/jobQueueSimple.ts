@@ -525,6 +525,7 @@ class SimpleJobQueueManager {
 	): Promise<string> {
 		// skipcq: JS-0246
 		console.log(`📢 Notification (${type}): ${message}`);
+		// skipcq: JS-0246
 		return "notification-" + Date.now();
 	}
 
