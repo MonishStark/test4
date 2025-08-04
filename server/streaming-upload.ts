@@ -408,7 +408,7 @@ export class AudioFileStreamProcessor {
 						});
 					}
 				})
-				.catch((error: any) => {
+				.catch((error: Error) => {
 					console.error("Python analysis error:", error);
 					reject(error);
 				});
