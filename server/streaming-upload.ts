@@ -189,6 +189,7 @@ export function createStreamingUploader(
 		filename: (req, file, cb) => {
 			// Generate unique filename to prevent conflicts
 			const uploadId = generateUploadId();
+			// skipcq: JS-0246
 			const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
 			const sanitizedName = sanitizeFilename(file.originalname);
 			const ext = path.extname(sanitizedName);

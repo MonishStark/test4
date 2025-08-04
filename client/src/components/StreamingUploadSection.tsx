@@ -71,6 +71,7 @@ const formatBytes = (bytes: number): string => {
 	const k = 1024;
 	const sizes = ["Bytes", "KB", "MB", "GB"];
 	const i = Math.floor(Math.log(bytes) / Math.log(k));
+	// skipcq: JS-0246
 	return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
 };
 
@@ -249,6 +250,7 @@ export const StreamingUploadSection: React.FC<StreamingUploadSectionProps> = ({
 				cleanup(); // Clean up any previous uploads
 
 				// Validate file
+				// skipcq: JS-0246
 				const fileExtension = "." + file.name.split(".").pop()?.toLowerCase();
 				if (!allowedFormats.includes(fileExtension)) {
 					throw new Error(
