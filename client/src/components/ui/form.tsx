@@ -2,7 +2,9 @@
 
 "use client";
 
+// skipcq: JS-C1003
 import * as React from "react";
+// skipcq: JS-C1003
 import * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
 import {

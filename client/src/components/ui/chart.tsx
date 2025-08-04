@@ -2,7 +2,9 @@
 
 "use client";
 
+// skipcq: JS-C1003
 import * as React from "react";
+// skipcq: JS-C1003
 import * as RechartsPrimitive from "recharts";
 
 import { cn } from "@/lib/utils";

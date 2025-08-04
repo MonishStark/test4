@@ -132,7 +132,7 @@ const VersionPlayer: React.FC<VersionPlayerProps> = ({ track, version }) => {
 			</div>
 			<div
 				className='player-progress mt-2 mb-2 h-2 bg-gray-200 rounded-full overflow-hidden cursor-pointer'
-				// skipcq: JS-0437, JS-0746
+				// skipcq: JS-0437, JS-0746, JS-0417
 				onClick={(e) => {
 					if (!audioRef.current) return;
 					const rect = e.currentTarget.getBoundingClientRect();

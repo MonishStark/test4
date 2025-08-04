@@ -1,6 +1,8 @@
 /** @format */
 
+// skipcq: JS-C1003
 import * as React from "react";
+// skipcq: JS-C1003
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 
 import { cn } from "@/lib/utils";
