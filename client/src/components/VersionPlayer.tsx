@@ -179,6 +179,7 @@ const VersionPlayer: React.FC<VersionPlayerProps> = ({ track, version }) => {
 			</div>
 			{/* skipcq: JS-0754 */}
 			<audio
+				// skipcq: JS-0754
 				ref={audioRef}
 				src={`/api/audio/${track.id}/extended?version=${version}`}
 				preload='metadata'

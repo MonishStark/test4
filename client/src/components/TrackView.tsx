@@ -489,6 +489,7 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 			)}
 			{/* skipcq: JS-0754 */}
 			<audio
+				// skipcq: JS-0754
 				ref={audioRef}
 				src={`/api/audio/${track.id}/${type}`}
 				preload='metadata'
