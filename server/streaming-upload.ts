@@ -18,6 +18,7 @@ import { createWriteStream, createReadStream, promises as fs } from "fs";
 import { pipeline } from "stream/promises";
 import path from "path";
 import crypto from "crypto";
+import { logger } from "../shared/logger";
 import { PythonShell } from "python-shell";
 
 // Types for streaming upload
@@ -151,7 +152,10 @@ function validateFilePath(filePath: string, allowedDirectory: string): boolean {
 			resolvedFilePath === resolvedAllowedDir
 		);
 	} catch (error) {
-		console.error("Path validation error:", error);
+		logger.error(
+			"Path validation error",
+			error instanceof Error ? error : new Error(String(error))
+		);
 		return false;
 	}
 }
@@ -409,7 +413,10 @@ export class AudioFileStreamProcessor {
 								format: audioInfo.format || "unknown",
 							});
 						} catch (e) {
-							console.error("Error parsing audio info:", e);
+							logger.error(
+								"Error parsing audio info",
+								e instanceof Error ? e : new Error(String(e))
+							);
 							resolve({
 								duration: 0,
 								bitrate: 0,
@@ -429,7 +436,7 @@ export class AudioFileStreamProcessor {
 					}
 				})
 				.catch((error: Error) => {
-					console.error("Python analysis error:", error);
+					logger.error("Python analysis error", error);
 					reject(error);
 				});
 		});
@@ -489,7 +496,10 @@ export class AudioFileStreamProcessor {
 			await fs.unlink(filePath);
 		} catch (error) {
 			// nosemgrep: javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring
-			console.warn(`Failed to cleanup file ${filePath}:`, error);
+			logger.warn("Failed to cleanup file", {
+				filePath,
+				error: error instanceof Error ? error.message : String(error),
+			});
 		}
 	}
 }

@@ -144,6 +144,14 @@ router.post(
 			const uploadId = req.uploadId;
 			const file = req.file;
 
+			// Validate uploadId is provided by middleware
+			if (!uploadId) {
+				return res.status(400).json({
+					error: "Missing upload ID",
+					message: "Upload ID is required for streaming upload",
+				});
+			}
+
 			if (!file) {
 				return res.status(400).json({
 					error: "No file uploaded",
@@ -153,8 +161,7 @@ router.post(
 			}
 
 			// Update progress to processing state
-			// skipcq: JS-0339
-			updateUploadProgress(uploadId!, {
+			updateUploadProgress(uploadId, {
 				status: "processing",
 				percentage: 100,
 			});
@@ -178,7 +185,7 @@ router.post(
 			// Process the uploaded file for metadata
 			const result = await streamProcessor.processAudioFile(
 				file.path,
-				uploadId! // skipcq: JS-0339
+				uploadId
 			);
 
 			// Update track with metadata (same as existing flow)
@@ -193,8 +200,7 @@ router.post(
 			}
 
 			// Final progress update
-			// skipcq: JS-0339
-			updateUploadProgress(uploadId!, {
+			updateUploadProgress(uploadId, {
 				status: "completed",
 				percentage: 100,
 			});

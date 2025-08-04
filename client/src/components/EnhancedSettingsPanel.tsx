@@ -18,6 +18,7 @@
 import React, { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { ProcessingSettings } from "@shared/schema";
+import { logger } from "../../../shared/logger";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -234,7 +235,11 @@ export const EnhancedSettingsPanel: React.FC<EnhancedSettingsPanelProps> = ({
 			// Notify parent component with job ID
 			onProcessingStart(result.jobId);
 		} catch (error) {
-			console.error("Processing error:", error);
+			logger.processingError(
+				"Track processing job submission failed",
+				error instanceof Error ? error : new Error(String(error)),
+				{ trackId }
+			);
 			toast({
 				title: "Processing Failed",
 				description:
@@ -267,7 +272,11 @@ export const EnhancedSettingsPanel: React.FC<EnhancedSettingsPanelProps> = ({
 				duration: 3000,
 			});
 		} catch (error) {
-			console.error("Cancel job error:", error);
+			logger.processingError(
+				"Job cancellation failed",
+				error instanceof Error ? error : new Error(String(error)),
+				{ jobId: activeJobId }
+			);
 			toast({
 				title: "Cancel Failed",
 				description: "Failed to cancel the processing job.",

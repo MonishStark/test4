@@ -3,10 +3,22 @@
 import React, { useState, useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+import { logger } from "../../../shared/logger";
 import UploadSection from "@/components/UploadSection";
 import SettingsPanel from "@/components/SettingsPanel";
 import ProcessingInfo from "@/components/ProcessingInfo";
 import TrackPreview from "@/components/TrackPreview";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { AudioTrack } from "@shared/schema";
 
 const Home: React.FC = () => {
@@ -58,7 +70,11 @@ const Home: React.FC = () => {
 						localStorage.setItem("isProcessing", "true");
 					}
 				} catch (error) {
-					console.error("Error checking initial status:", error);
+					logger.error(
+						"Error checking initial track status",
+						error instanceof Error ? error : new Error(String(error)),
+						{ trackId: currentTrackId }
+					);
 				}
 			}
 		};
@@ -71,18 +87,19 @@ const Home: React.FC = () => {
 		localStorage.setItem("isProcessing", isProcessing.toString());
 	}, [isProcessing]);
 
-	useQuery<AudioTrack[]>({
+	const { data: tracks } = useQuery<AudioTrack[]>({
 		queryKey: ["/api/tracks"],
 		staleTime: Infinity,
-		cacheTime: Infinity,
-		onSuccess: (tracks) => {
-			// Set the most recent track as current if none selected
-			if (!currentTrackId && tracks?.length > 0) {
-				setCurrentTrackId(tracks[0].id);
-				setIsProcessed(tracks[0].status === "completed");
-			}
-		},
+		gcTime: Infinity,
 	});
+
+	// Handle track selection when tracks change
+	useEffect(() => {
+		if (!currentTrackId && tracks && tracks.length > 0) {
+			setCurrentTrackId(tracks[0].id);
+			setIsProcessed(tracks[0].status === "completed");
+		}
+	}, [tracks, currentTrackId]);
 
 	const { data: track } = useQuery<AudioTrack>({
 		queryKey: currentTrackId ? [`/api/tracks/${currentTrackId}`] : ["no-track"],
@@ -92,7 +109,7 @@ const Home: React.FC = () => {
 
 	// Check if the track is already processed when loading
 	useEffect(() => {
-		if (track && track.status === "completed" && track.extendedPath) {
+		if (track && track.status === "completed" && track.extendedPaths?.length) {
 			setIsProcessed(true);
 			setIsProcessing(false);
 		}
@@ -130,39 +147,51 @@ const Home: React.FC = () => {
 						onUploadSuccess={handleUploadSuccess} // skipcq: JS-0417
 					/>
 					{currentTrackId && (
-						<button
-							// skipcq: JS-0417
-							onClick={async () => {
-								if (
-									// skipcq: JS-0052
-									window.confirm(
-										"Are you sure you want to clear all tracks? This cannot be undone."
-									)
-								) {
-									try {
-										await fetch("/api/tracks", { method: "DELETE" });
-										queryClient.invalidateQueries({
-											queryKey: ["/api/tracks"],
-										});
-										setCurrentTrackId(null);
-										setIsProcessed(false);
-										toast({
-											title: "Tracks Cleared",
-											description: "All tracks have been removed successfully.",
-										});
-									} catch {
-										toast({
-											title: "Error",
-											description: "Failed to clear tracks.",
-											variant: "destructive",
-										});
-									}
-								}
-							}}
-							className='w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium shadow-sm flex items-center justify-center gap-2'>
-							<span className='material-icons text-sm'>delete</span>
-							Clear All Tracks
-						</button>
+						<AlertDialog>
+							<AlertDialogTrigger asChild>
+								<button className='w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium shadow-sm flex items-center justify-center gap-2'>
+									<span className='material-icons text-sm'>delete</span>
+									Clear All Tracks
+								</button>
+							</AlertDialogTrigger>
+							<AlertDialogContent>
+								<AlertDialogHeader>
+									<AlertDialogTitle>Clear All Tracks</AlertDialogTitle>
+									<AlertDialogDescription>
+										Are you sure you want to clear all tracks? This cannot be
+										undone.
+									</AlertDialogDescription>
+								</AlertDialogHeader>
+								<AlertDialogFooter>
+									<AlertDialogCancel>Cancel</AlertDialogCancel>
+									<AlertDialogAction
+										onClick={async () => {
+											try {
+												await fetch("/api/tracks", { method: "DELETE" });
+												queryClient.invalidateQueries({
+													queryKey: ["/api/tracks"],
+												});
+												setCurrentTrackId(null);
+												setIsProcessed(false);
+												toast({
+													title: "Tracks Cleared",
+													description:
+														"All tracks have been removed successfully.",
+												});
+											} catch {
+												toast({
+													title: "Error",
+													description: "Failed to clear tracks.",
+													variant: "destructive",
+												});
+											}
+										}}
+										className='bg-red-500 hover:bg-red-600'>
+										Clear All Tracks
+									</AlertDialogAction>
+								</AlertDialogFooter>
+							</AlertDialogContent>
+						</AlertDialog>
 					)}
 					{isProcessing && currentTrackId ? (
 						<ProcessingInfo

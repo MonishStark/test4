@@ -6,7 +6,7 @@
  */
 
 import { Pool } from "pg";
-import fs from "fs";
+import { promises as fsPromises } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path"; // skipcq: JS-0232
@@ -38,11 +38,14 @@ async function runMigration() {
 			);
 			console.log("Migration path:", migrationPath);
 
-			if (!fs.existsSync(migrationPath)) {
+			// Check if migration file exists and read it asynchronously
+			let migrationSQL;
+			try {
+				migrationSQL = await fsPromises.readFile(migrationPath, "utf8");
+			} catch {
 				throw new Error(`Migration file not found at: ${migrationPath}`);
 			}
 
-			const migrationSQL = fs.readFileSync(migrationPath, "utf8");
 			console.log("Migration SQL length:", migrationSQL.length);
 
 			if (migrationSQL.length === 0) {

@@ -146,7 +146,7 @@ export const JobQueueMonitor: React.FC<JobQueueMonitorProps> = ({
 				} else if (status === "failed") {
 					// Remove failed job and notify parent
 					updated.delete(jobId);
-					const error = jobUpdate.data?.error || "Unknown error";
+					const error = String(jobUpdate.data?.error || "Unknown error");
 					onJobFailed?.(jobId, trackId, error);
 
 					toast({

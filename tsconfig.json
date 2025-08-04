@@ -26,19 +26,21 @@
 
 		// Compilation mode
 		"noEmit": true, // Don't emit JS files (Vite handles compilation)
+		"target": "ES2020", // Target ES2020 for Map/Set iteration support
 
 		// Module system configuration
 		"module": "ESNext", // Use modern ES modules for tree-shaking
 		"moduleResolution": "bundler", // Use bundler-aware module resolution
 		"esModuleInterop": true, // Enable CommonJS/ES module interoperability
 		"allowImportingTsExtensions": true, // Allow importing .ts files directly
+		"downlevelIteration": true, // Enable Map/Set iteration support
 
 		// Type checking strictness
 		"strict": true, // Enable all strict type checking options
 		"skipLibCheck": true, // Skip type checking of declaration files for faster builds
 
 		// Runtime libraries
-		"lib": ["esnext", "dom", "dom.iterable"], // Include modern JS, DOM, and iteration APIs
+		"lib": ["ES2020", "dom", "dom.iterable"], // Include modern JS, DOM, and iteration APIs
 
 		// React configuration
 		"jsx": "preserve", // Preserve JSX for Vite to transform

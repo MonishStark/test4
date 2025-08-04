@@ -187,7 +187,7 @@ app.use((req, res, next) => {
 	if (app.get("env") === "development") {
 		await setupVite(app, server);
 	} else {
-		serveStatic(app);
+		await serveStatic(app);
 	}
 
 	const port = 5000;

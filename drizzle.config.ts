@@ -36,18 +36,42 @@ export default defineConfig({
 	// Ensures sensitive credentials are not hardcoded in source code
 	dbCredentials: {
 		// Database server hostname (e.g., localhost, remote server, or cloud provider)
-		host: process.env.DATABASE_HOST!, // skipcq: JS-0339
+		host:
+			process.env.DATABASE_HOST ||
+			(() => {
+				throw new Error(
+					"DATABASE_HOST environment variable is required for database connection"
+				);
+			})(),
 
 		// Database server port (PostgreSQL default: 5432)
 		port: parseInt(process.env.DATABASE_PORT || "5432", 10),
 
 		// Database username with appropriate permissions for schema operations
-		user: process.env.DATABASE_USER!, // skipcq: JS-0339
+		user:
+			process.env.DATABASE_USER ||
+			(() => {
+				throw new Error(
+					"DATABASE_USER environment variable is required for database connection"
+				);
+			})(),
 
 		// Database password (should be strong and securely stored)
-		password: process.env.DATABASE_PASSWORD!, // skipcq: JS-0339
+		password:
+			process.env.DATABASE_PASSWORD ||
+			(() => {
+				throw new Error(
+					"DATABASE_PASSWORD environment variable is required for database connection"
+				);
+			})(),
 
 		// Target database name for the application
-		database: process.env.DATABASE_NAME!, // skipcq: JS-0339
+		database:
+			process.env.DATABASE_NAME ||
+			(() => {
+				throw new Error(
+					"DATABASE_NAME environment variable is required for database connection"
+				);
+			})(),
 	},
 });

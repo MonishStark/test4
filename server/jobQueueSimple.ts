@@ -11,7 +11,7 @@ import { storage } from "./storage";
 import { ProcessingSettings } from "@shared/schema";
 import { spawn } from "child_process";
 import path from "path";
-import fs from "fs";
+import { promises as fsPromises } from "fs";
 
 // Security function to sanitize data for logging
 function sanitizeForLog(
@@ -244,7 +244,9 @@ class SimpleJobQueueManager {
 				currentStep: 2,
 			});
 
-			if (!fs.existsSync(data.originalPath)) {
+			try {
+				await fsPromises.access(data.originalPath);
+			} catch {
 				throw new Error("Source audio file not found");
 			}
 
@@ -263,9 +265,13 @@ class SimpleJobQueueManager {
 			const scriptPath = path.join(__dirname, scriptName);
 
 			// Check if optimized script exists, fallback to regular if not
-			const finalScriptPath = fs.existsSync(scriptPath)
-				? scriptPath
-				: path.join(__dirname, "audioProcessor.py");
+			let finalScriptPath: string;
+			try {
+				await fsPromises.access(scriptPath);
+				finalScriptPath = scriptPath;
+			} catch {
+				finalScriptPath = path.join(__dirname, "audioProcessor.py");
+			}
 
 			// Run Python processing
 			await this.runPythonScript(finalScriptPath, data, updateProgress);
@@ -278,7 +284,9 @@ class SimpleJobQueueManager {
 				currentStep: 5,
 			});
 
-			if (!fs.existsSync(data.outputPath)) {
+			try {
+				await fsPromises.access(data.outputPath);
+			} catch {
 				throw new Error("Processing completed but output file not found");
 			}
 
@@ -293,7 +301,7 @@ class SimpleJobQueueManager {
 			// Update database
 			await storage.updateAudioTrack(data.trackId, {
 				status: "completed",
-				processedFilePath: data.outputPath,
+				extendedPaths: data.outputPath ? [data.outputPath] : undefined,
 			});
 
 			// Complete
@@ -326,7 +334,7 @@ class SimpleJobQueueManager {
 			const job = this.activeJobs.get(data.jobId);
 			if (job) {
 				job.status = JobStatus.FAILED;
-				job.error = error.message;
+				job.error = error instanceof Error ? error.message : String(error);
 			}
 
 			throw error;

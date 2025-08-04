@@ -14,10 +14,9 @@ import StreamingUploadSection from "./StreamingUploadSection";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AudioTrack } from "@/shared/schema";
 
 interface EnhancedUploadProps {
-	onUploadSuccess: (track: AudioTrack) => void;
+	onUploadSuccess: (trackId: number) => void;
 	onUploadError?: (error: string) => void;
 }
 

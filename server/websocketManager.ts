@@ -18,6 +18,7 @@ import { Server as SocketIOServer, Socket } from "socket.io";
 import { Server as HTTPServer } from "http";
 import { jobQueueManager } from "./jobQueueSimple";
 import { websocketCorsOptions } from "./cors-config";
+import { logger } from "../shared/logger";
 
 // Define proper interfaces for job progress and data
 interface JobProgress {
@@ -108,7 +109,10 @@ export class WebSocketManager {
 		// Inject Socket.IO instance into job queue manager
 		jobQueueManager.setSocketIo(this.io);
 
-		console.log("WebSocket server initialized");
+		logger.info("WebSocket server initialized", {
+			component: "WebSocketManager",
+			action: "initialize",
+		});
 	}
 
 	/**
@@ -116,7 +120,11 @@ export class WebSocketManager {
 	 */
 	private setupEventHandlers() {
 		this.io.on("connection", (socket) => {
-			console.log(`Client connected: ${socket.id}`);
+			logger.info("Client connected to WebSocket", {
+				component: "WebSocketManager",
+				action: "client_connect",
+				socketId: socket.id,
+			});
 
 			// Handle user authentication/identification
 			socket.on(
@@ -275,11 +283,13 @@ export class WebSocketManager {
 			socket.join("admin");
 		}
 
-		console.log(
-			`User ${userId} authenticated with socket ${socket.id}${
-				isAdmin ? " (admin)" : ""
-			}`
-		);
+		logger.info("User authenticated", {
+			component: "WebSocketManager",
+			action: "user_authenticate",
+			userId,
+			socketId: socket.id,
+			isAdmin,
+		});
 
 		// Send authentication confirmation
 		socket.emit("authenticated", {
@@ -313,17 +323,20 @@ export class WebSocketManager {
 				}
 			}
 
-			console.log(
-				`User ${sanitizeForLog(userId)} disconnected: ${
-					socket.id
-				} (${sanitizeForLog(reason)})`
-			);
+			logger.info("User disconnected", {
+				component: "WebSocketManager",
+				action: "user_disconnect",
+				userId: sanitizeForLog(userId),
+				socketId: socket.id,
+				reason: sanitizeForLog(reason),
+			});
 		} else {
-			console.log(
-				`Anonymous client disconnected: ${socket.id} (${sanitizeForLog(
-					reason
-				)})`
-			);
+			logger.info("Anonymous client disconnected", {
+				component: "WebSocketManager",
+				action: "anonymous_disconnect",
+				socketId: socket.id,
+				reason: sanitizeForLog(reason),
+			});
 		}
 
 		// Remove socket from connected users
@@ -342,7 +355,10 @@ export class WebSocketManager {
 				timestamp: new Date().toISOString(),
 			});
 		} catch (error) {
-			console.error("Error sending queue stats:", error);
+			logger.error(
+				"Error sending queue stats to socket",
+				error instanceof Error ? error : new Error(String(error))
+			);
 		}
 	}
 
@@ -359,7 +375,10 @@ export class WebSocketManager {
 					timestamp: new Date().toISOString(),
 				});
 			} catch (error) {
-				console.error("Error in periodic stats update:", error);
+				logger.error(
+					"Error in periodic stats update",
+					error instanceof Error ? error : new Error(String(error))
+				);
 			}
 		}, 30000);
 
@@ -395,7 +414,10 @@ export class WebSocketManager {
 		}
 
 		if (cleanedCount > 0) {
-			console.log(`Cleaned up ${cleanedCount} stale socket connections`);
+			logger.info("Cleaned up stale socket connections", {
+				count: cleanedCount,
+				action: "cleanup_stale_sockets",
+			});
 		}
 	}
 
@@ -441,7 +463,10 @@ export class WebSocketManager {
 	 * Graceful shutdown
 	 */
 	async shutdown() {
-		console.log("Shutting down WebSocket server...");
+		logger.info("WebSocket server shutting down", {
+			action: "server_shutdown",
+			connections: this.connectedUsers.size,
+		});
 
 		// Notify all connected clients about shutdown
 		this.io.emit("server-shutdown", {
@@ -452,7 +477,9 @@ export class WebSocketManager {
 		// Close all connections
 		this.io.close();
 
-		console.log("WebSocket server shutdown completed");
+		logger.info("WebSocket server shutdown completed", {
+			action: "server_shutdown_complete",
+		});
 	}
 }
 

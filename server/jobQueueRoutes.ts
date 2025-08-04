@@ -15,20 +15,11 @@
  */
 
 import type { Express, Request, Response } from "express";
-import { jobQueueManager, JobPriority } from "./jobQueue";
+import { jobQueueManager, JobPriority } from "./jobQueueSimple";
 import { storage } from "./storage";
 import { processingSettingsSchema, ProcessingSettings } from "@shared/schema";
 import { InputSanitizer } from "./security-utils.js";
 import path from "path";
-
-// Interface for queue statistics
-interface QueueStats {
-	waiting: number;
-	active: number;
-	completed: number;
-	failed: number;
-	total: number;
-}
 
 // Interface for detailed track status response
 interface DetailedTrackStatusResponse {
@@ -111,16 +102,20 @@ export function setupJobQueueRoutes(app: Express) {
 					process.env.RESULTS_DIR || path.join(process.cwd(), "results");
 				const outputPath = path.join(resultDir, outputFilename); // nosemgrep: javascript.express.security.audit.express-path-join-resolve-traversal.express-path-join-resolve-traversal, javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal
 
-				// Add job to queue
-				const jobId = await jobQueueManager.addAudioProcessingJob(
-					id,
-					track.originalPath,
+				// Create job data object
+				const jobData = {
+					jobId: `audio_${id}_${Date.now()}`,
+					trackId: id,
+					originalPath: track.originalPath,
 					outputPath,
 					settings,
-					track.userId || 1, // Default to demo user
+					userId: track.userId || 1, // Default to demo user
 					priority,
-					useOptimization
-				);
+					useOptimization,
+				};
+
+				// Add job to queue
+				const jobId = await jobQueueManager.addAudioProcessingJob(jobData);
 
 				// Return immediate response with job information
 				res.status(202).json({
@@ -163,20 +158,22 @@ export function setupJobQueueRoutes(app: Express) {
 
 			const jobStatus = await jobQueueManager.getJobStatus(jobId);
 
-			if (!jobStatus) {
+			if (!jobStatus || jobStatus.status === "not_found") {
 				return res.status(404).json({ message: "Job not found" });
 			}
 
 			res.json({
 				jobId,
-				status: jobStatus.state,
+				status: jobStatus.status,
 				progress: jobStatus.progress,
-				createdAt: jobStatus.createdAt,
-				processedOn: jobStatus.processedOn,
-				finishedOn: jobStatus.finishedOn,
-				failedReason: jobStatus.failedReason,
-				attemptsMade: jobStatus.attemptsMade,
-				data: jobStatus.data,
+				error: jobStatus.error,
+				// For compatibility with expected response format
+				createdAt: new Date().toISOString(),
+				processedOn: null,
+				finishedOn: null,
+				failedReason: jobStatus.error,
+				attemptsMade: 1,
+				data: jobStatus,
 			});
 		} catch (error) {
 			console.error("Get job status error:", error);
@@ -244,26 +241,9 @@ export function setupJobQueueRoutes(app: Express) {
 			const stats = await jobQueueManager.getQueueStats();
 
 			res.json({
-				timestamp: new Date().toISOString(),
-				queues: stats,
-				summary: {
-					totalJobs: (Object.values(stats) as QueueStats[]).reduce(
-						(sum: number, queue: QueueStats) => sum + queue.total,
-						0
-					),
-					activeJobs: (Object.values(stats) as QueueStats[]).reduce(
-						(sum: number, queue: QueueStats) => sum + queue.active,
-						0
-					),
-					waitingJobs: (Object.values(stats) as QueueStats[]).reduce(
-						(sum: number, queue: QueueStats) => sum + queue.waiting,
-						0
-					),
-					failedJobs: (Object.values(stats) as QueueStats[]).reduce(
-						(sum: number, queue: QueueStats) => sum + queue.failed,
-						0
-					),
-				},
+				timestamp: stats.timestamp,
+				queues: stats.queues,
+				summary: stats.summary,
 			});
 		} catch (error) {
 			console.error("Get queue stats error:", error);
@@ -301,7 +281,7 @@ export function setupJobQueueRoutes(app: Express) {
 					break;
 
 				case "cleanup":
-					await jobQueueManager.cleanupJobs();
+					await jobQueueManager.cleanupOldJobs();
 					res.json({ message: "Job cleanup completed", action: "cleanup" });
 					break;
 
@@ -388,16 +368,20 @@ export function setupJobQueueRoutes(app: Express) {
 						process.env.RESULTS_DIR || path.join(process.cwd(), "results");
 					const outputPath = path.join(resultDir, outputFilename); // nosemgrep: javascript.express.security.audit.express-path-join-resolve-traversal.express-path-join-resolve-traversal, javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal
 
-					// Add job to queue with slight delay to spread the load
-					const jobId = await jobQueueManager.addAudioProcessingJob(
+					// Create job data object for bulk processing
+					const jobData = {
+						jobId: `audio_${trackId}_${Date.now()}_bulk`,
 						trackId,
-						track.originalPath,
+						originalPath: track.originalPath,
 						outputPath,
-						validatedSettings,
-						track.userId || 1,
+						settings: validatedSettings,
+						userId: track.userId || 1,
 						priority,
-						useOptimization
-					);
+						useOptimization,
+					};
+
+					// Add job to queue with slight delay to spread the load
+					const jobId = await jobQueueManager.addAudioProcessingJob(jobData);
 
 					jobIds.push(jobId);
 				} catch (error) {
@@ -491,26 +475,17 @@ export function setupJobQueueRoutes(app: Express) {
 		try {
 			const stats = await jobQueueManager.getQueueStats();
 
-			// Calculate health metrics
-			const totalJobs = (Object.values(stats) as QueueStats[]).reduce(
-				(sum: number, queue: QueueStats) => sum + queue.total,
-				0
-			);
-			const failedJobs = (Object.values(stats) as QueueStats[]).reduce(
-				(sum: number, queue: QueueStats) => sum + queue.failed,
-				0
-			);
-			const activeJobs = (Object.values(stats) as QueueStats[]).reduce(
-				(sum: number, queue: QueueStats) => sum + queue.active,
-				0
-			);
+			// Calculate health metrics using the correct stats structure
+			const totalJobs = stats.summary.totalJobs;
+			const failedJobs = stats.summary.failedJobs;
+			const activeJobs = stats.summary.activeJobs;
 
 			const failureRate = totalJobs > 0 ? (failedJobs / totalJobs) * 100 : 0;
 			const isHealthy = failureRate < 10 && activeJobs < 20; // Configurable thresholds
 
 			res.json({
 				status: isHealthy ? "healthy" : "degraded",
-				timestamp: new Date().toISOString(),
+				timestamp: stats.timestamp,
 				metrics: {
 					totalJobs,
 					activeJobs,

@@ -28,7 +28,10 @@ export default [
 			// TypeScript specific rules
 			"@typescript-eslint/no-unused-vars": [
 				"error",
-				{ argsIgnorePattern: "^_" },
+				{
+					argsIgnorePattern: "^_",
+					destructuredArrayIgnorePattern: "^_",
+				},
 			],
 			"@typescript-eslint/no-explicit-any": "warn",
 			"@typescript-eslint/no-non-null-assertion": "warn",

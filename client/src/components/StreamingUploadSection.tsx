@@ -20,11 +20,11 @@ import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AudioTrack } from "@/shared/schema";
+import { AudioTrack } from "@shared/schema";
 
 interface StreamingUploadSectionProps {
-	/** Callback function triggered when upload completes successfully with the new track */
-	onUploadSuccess: (track: AudioTrack) => void;
+	/** Callback function triggered when upload completes successfully with the new track ID */
+	onUploadSuccess: (trackId: number) => void;
 	/** Optional callback for upload errors */
 	onUploadError?: (error: string) => void;
 	/** Maximum file size in bytes (default: 500MB) */
@@ -309,7 +309,7 @@ export const StreamingUploadSection: React.FC<StreamingUploadSectionProps> = ({
 				});
 
 				// Call success callback with track data
-				onUploadSuccess(result);
+				onUploadSuccess(result.id);
 			} catch (error) {
 				cleanup();
 				const errorMessage =

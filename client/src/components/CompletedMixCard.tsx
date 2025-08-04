@@ -16,7 +16,7 @@ const CompletedMixCard: React.FC<CompletedMixCardProps> = ({
 	onAdjust,
 }) => {
 	// Only show if track is successfully processed
-	if (track.status !== "completed" || !track.extendedPath) {
+	if (track.status !== "completed" || !track.extendedPaths?.length) {
 		return null;
 	}
 
@@ -51,8 +51,11 @@ const CompletedMixCard: React.FC<CompletedMixCardProps> = ({
 						{track.originalFilename.match(/\.[^/.]+$/)?.[0] || ""}
 					</h3>
 					<p className='text-gray-500 mb-2'>
-						Extended • {formatDuration(track.extendedDuration || 0)} •{" "}
-						{track.bpm || "--"} BPM
+						Extended •{" "}
+						{formatDuration(
+							track.extendedDurations?.[track.extendedDurations.length - 1] || 0
+						)}{" "}
+						• {track.bpm || "--"} BPM
 					</p>
 
 					<div className='text-sm text-gray-600 mb-3'>

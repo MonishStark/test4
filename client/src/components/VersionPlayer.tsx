@@ -131,9 +131,7 @@ const VersionPlayer: React.FC<VersionPlayerProps> = ({ track, version }) => {
 							.map((_, i) => {
 								const originalLength = track.duration || 0;
 								const extendedLength =
-									track.extendedDurations?.[version] ||
-									track.extendedDuration ||
-									duration;
+									track.extendedDurations?.[version] || duration;
 								const introLength = Math.max(
 									0,
 									extendedLength - originalLength

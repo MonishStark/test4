@@ -9,6 +9,7 @@
 
 import path from "path";
 import fs from "fs";
+import { promises as fsPromises } from "fs";
 import { Request, Response, NextFunction } from "express";
 
 /**
@@ -145,9 +146,9 @@ export class SecurePathValidator {
 	 * Check if directory is writable
 	 */
 	// skipcq: JS-0105
-	private isDirectoryWritable(dirPath: string): boolean {
+	private async isDirectoryWritable(dirPath: string): Promise<boolean> {
 		try {
-			fs.accessSync(dirPath, fs.constants.W_OK);
+			await fsPromises.access(dirPath, fs.constants.W_OK);
 			return true;
 		} catch {
 			return false;
@@ -274,14 +275,19 @@ export function createSecurityMiddleware(validator: SecurePathValidator) {
 
 			// skipcq: JS-0045
 			return (req: Request, res: Response, next: NextFunction) => {
-				const clientIp = req.ip || req.connection.remoteAddress;
+				const clientIp = req.ip || req.connection.remoteAddress || "unknown";
 				const now = Date.now();
 				if (!requestCounts.has(clientIp)) {
 					requestCounts.set(clientIp, { count: 1, resetTime: now + windowMs });
 					return next();
 				}
 
-				const clientData = requestCounts.get(clientIp)!; // skipcq: JS-0339
+				const clientData = requestCounts.get(clientIp);
+				if (!clientData) {
+					// This should not happen since we just checked has() above, but for type safety
+					requestCounts.set(clientIp, { count: 1, resetTime: now + windowMs });
+					return next();
+				}
 
 				if (now > clientData.resetTime) {
 					clientData.count = 1;

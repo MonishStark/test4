@@ -9,10 +9,10 @@
 
 import fetch from "node-fetch";
 import { fileURLToPath } from "url";
-import { dirname } from "path";
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// Note: __dirname calculated but not used in this script
+// const __dirname = dirname(__filename);
 
 // Utility function to sanitize user input for logging
 function sanitizeForLog(input) {
@@ -156,7 +156,7 @@ async function testSecurityHeaders() {
 		console.log("   Security Headers:", securityHeaders);
 
 		const missingHeaders = Object.entries(securityHeaders)
-			.filter(([key, value]) => !value) // skipcq: JS-0128
+			.filter(([_key, value]) => !value) // skipcq: JS-0128
 			.map(([key]) => key);
 
 		if (missingHeaders.length === 0) {
@@ -180,7 +180,7 @@ async function runTests() {
 			throw new Error("Server health check failed");
 		}
 		console.log("✅ Server is running and healthy");
-	} catch (error) {
+	} catch {
 		console.log(
 			"❌ Server is not running. Please start the server with: npm run dev"
 		);

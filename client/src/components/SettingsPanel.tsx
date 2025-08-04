@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { ProcessingSettings } from "@shared/schema";
+import { logger } from "../../../shared/logger";
 
 /**
  * SettingsPanel Component
@@ -133,7 +134,11 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
 			onProcessingStart();
 		} catch (error) {
 			// skipcq: JS-0002
-			console.error("Processing error:", error);
+			logger.processingError(
+				"Track processing failed",
+				error instanceof Error ? error : new Error(String(error)),
+				{ trackId }
+			);
 
 			// Show error notification with descriptive message
 			toast({

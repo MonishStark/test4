@@ -7,6 +7,8 @@ import { useToast } from "@/hooks/use-toast";
 import { queryClient } from "@/lib/queryClient";
 import VersionPlayer from "./VersionPlayer";
 
+import { logger } from "../../../shared/logger";
+
 interface TrackViewProps {
 	track: AudioTrack;
 	type: "original" | "extended";
@@ -29,6 +31,9 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 	const progressIntervalRef = useRef<number>();
 	const statusIntervalRef = useRef<number>(); // Added ref for status polling interval
 	const { toast } = useToast();
+
+	// Type flag to avoid TypeScript comparison issues
+	const isExtendedVersion = type === "extended";
 
 	const displayTitle =
 		type === "original"
@@ -64,7 +69,11 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 						});
 					}
 				} catch (error) {
-					console.error("Error checking status:", error);
+					logger.error(
+						"Error checking track processing status",
+						error instanceof Error ? error : new Error(String(error)),
+						{ trackId: track.id }
+					);
 				}
 			};
 			checkInitialStatus();
@@ -125,7 +134,11 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 						});
 					}
 				} catch (error) {
-					console.error("Error in status check:", error);
+					logger.error(
+						"Error in status polling check",
+						error instanceof Error ? error : new Error(String(error)),
+						{ trackId: track.id }
+					);
 				}
 			};
 
@@ -279,7 +292,11 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 
 			// The polling will now be handled by the useEffect
 		} catch (error) {
-			console.error("Regeneration error:", error);
+			logger.error(
+				"Regeneration operation failed",
+				error instanceof Error ? error : new Error(String(error)),
+				{ trackId: track.id }
+			);
 			toast({
 				title: "Error",
 				description: "Failed to regenerate extended mix",
@@ -339,7 +356,7 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 								</span>
 							</div>
 						</div>
-						{type === "extended" && (
+						{isExtendedVersion && (
 							<div className='flex items-center gap-2'>
 								<span className='text-gray-500'>Intro Length:</span>
 								<span className='font-medium'>
@@ -360,14 +377,15 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 									.fill(0)
 									.map((_, i) => {
 										const isIntroSection =
-											type === "extended" &&
+											isExtendedVersion &&
 											i <=
-												((track.settings?.introLength || 16) / track.bpm) *
+												((track.settings?.introLength || 16) /
+													(track.bpm || 120)) *
 													60 *
 													(150 / duration);
+										const waveformBars = isExtendedVersion ? 150 : 120;
 										const isCurrentlyPlaying =
-											i / (type === "original" ? 120 : 150) <=
-											currentTime / duration;
+											i / waveformBars <= currentTime / duration;
 
 										return (
 											<div
@@ -379,18 +397,17 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 													height: `${Math.floor(Math.random() * 70 + 10)}px`,
 													width: "100%",
 													margin: "0 1px",
-													background:
-														type === "extended"
-															? isCurrentlyPlaying
-																? isIntroSection
-																	? "linear-gradient(to top, #10b981, #34d399)"
-																	: "linear-gradient(to top, #7c3aed, #a78bfa)"
-																: isIntroSection
-																? "linear-gradient(to top, #064e3b, #065f46)"
-																: "linear-gradient(to top, #4c1d95, #5b21b6)"
-															: isCurrentlyPlaying
-															? "linear-gradient(to top, #7c3aed, #a78bfa)"
-															: "linear-gradient(to top, #4b5563, #6b7280)",
+													background: isExtendedVersion
+														? isCurrentlyPlaying
+															? isIntroSection
+																? "linear-gradient(to top, #10b981, #34d399)"
+																: "linear-gradient(to top, #7c3aed, #a78bfa)"
+															: isIntroSection
+															? "linear-gradient(to top, #064e3b, #065f46)"
+															: "linear-gradient(to top, #4c1d95, #5b21b6)"
+														: isCurrentlyPlaying
+														? "linear-gradient(to top, #7c3aed, #a78bfa)"
+														: "linear-gradient(to top, #4b5563, #6b7280)",
 												}}></div>
 										);
 									})}
@@ -409,12 +426,12 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 						aria-valuemin={0}
 						aria-valuemax={displayDuration}
 						aria-valuenow={currentTime}>
-						{type === "extended" && (
+						{isExtendedVersion && (
 							<div
 								className='h-full bg-gradient-to-r from-emerald-500 to-emerald-400 absolute'
 								style={{
 									width: `${
-										((track.settings?.introLength || 16) / track.bpm) *
+										((track.settings?.introLength || 16) / (track.bpm || 120)) *
 										60 *
 										(100 / duration)
 									}%`,
@@ -456,76 +473,78 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 					</div>
 				</div>
 			)}
-			{type === "extended" && track.extendedPaths?.length > 0 && (
-				<div className='mt-4'>
-					<div className='flex items-center gap-4 mb-2 text-xs'>
-						<div className='flex items-center gap-1'>
-							<div className='w-3 h-3 rounded-sm bg-gradient-to-t from-[#10b981] to-[#34d399]'></div>
-							<span>Intro</span>
-						</div>
-						<div className='flex items-center gap-1'>
-							<div className='w-3 h-3 rounded-sm bg-gradient-to-t from-[#7c3aed] to-[#a78bfa]'></div>
-							<span>Main</span>
-						</div>
-					</div>
-					<div className='grid grid-cols-1 gap-6'>
-						{(track.extendedPaths || []).map((path, idx) => (
-							<VersionPlayer
-								key={`${track.id}-version-${idx}`} // skipcq: JS-0437
-								track={track}
-								version={idx}
-							/>
-						))}
-						{(track.extendedPaths?.length || 0) < 3 && (
-							<div>
-								<div className='text-sm text-gray-500 mb-2'>
-									Regenerations remaining:{" "}
-									{2 - ((track.extendedPaths?.length || 1) - 1)}
-								</div>
-								<button
-									className='inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50'
-									// skipcq: JS-0417
-									onClick={handleRegenerate}
-									disabled={
-										track.status === "processing" ||
-										isProcessing ||
-										(track.extendedPaths?.length || 0) >= 3
-									}>
-									{isProcessing ? (
-										<>
-											<svg
-												className='animate-spin -ml-1 mr-2 h-4 w-4 text-white'
-												xmlns='http://www.w3.org/2000/svg'
-												fill='none'
-												viewBox='0 0 24 24'>
-												<circle
-													className='opacity-25'
-													cx='12'
-													cy='12'
-													r='10'
-													stroke='currentColor'
-													strokeWidth='4'></circle>
-												<path
-													className='opacity-75'
-													fill='currentColor'
-													d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
-											</svg>
-											Processing...
-										</>
-									) : (
-										<>
-											<span className='material-icons text-sm mr-1'>
-												autorenew
-											</span>
-											Regenerate Extended Mix
-										</>
-									)}
-								</button>
+			{isExtendedVersion &&
+				track.extendedPaths &&
+				track.extendedPaths.length > 0 && (
+					<div className='mt-4'>
+						<div className='flex items-center gap-4 mb-2 text-xs'>
+							<div className='flex items-center gap-1'>
+								<div className='w-3 h-3 rounded-sm bg-gradient-to-t from-[#10b981] to-[#34d399]'></div>
+								<span>Intro</span>
 							</div>
-						)}
+							<div className='flex items-center gap-1'>
+								<div className='w-3 h-3 rounded-sm bg-gradient-to-t from-[#7c3aed] to-[#a78bfa]'></div>
+								<span>Main</span>
+							</div>
+						</div>
+						<div className='grid grid-cols-1 gap-6'>
+							{(track.extendedPaths || []).map((path, idx) => (
+								<VersionPlayer
+									key={`${track.id}-version-${idx}`} // skipcq: JS-0437
+									track={track}
+									version={idx}
+								/>
+							))}
+							{(track.extendedPaths?.length || 0) < 3 && (
+								<div>
+									<div className='text-sm text-gray-500 mb-2'>
+										Regenerations remaining:{" "}
+										{2 - ((track.extendedPaths?.length || 1) - 1)}
+									</div>
+									<button
+										className='inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50'
+										// skipcq: JS-0417
+										onClick={handleRegenerate}
+										disabled={
+											track.status === "processing" ||
+											isProcessing ||
+											(track.extendedPaths?.length || 0) >= 3
+										}>
+										{isProcessing ? (
+											<>
+												<svg
+													className='animate-spin -ml-1 mr-2 h-4 w-4 text-white'
+													xmlns='http://www.w3.org/2000/svg'
+													fill='none'
+													viewBox='0 0 24 24'>
+													<circle
+														className='opacity-25'
+														cx='12'
+														cy='12'
+														r='10'
+														stroke='currentColor'
+														strokeWidth='4'></circle>
+													<path
+														className='opacity-75'
+														fill='currentColor'
+														d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
+												</svg>
+												Processing...
+											</>
+										) : (
+											<>
+												<span className='material-icons text-sm mr-1'>
+													autorenew
+												</span>
+												Regenerate Extended Mix
+											</>
+										)}
+									</button>
+								</div>
+							)}
+						</div>
 					</div>
-				</div>
-			)}
+				)}
 
 			<audio
 				// skipcq: JS-0754

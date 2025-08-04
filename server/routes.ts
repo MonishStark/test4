@@ -4,9 +4,11 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { processingSettingsSchema } from "@shared/schema";
+import { logger } from "../shared/logger";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
+import { promises as fsPromises } from "fs";
 import { PythonShell } from "python-shell";
 import streamingRoutes from "./streaming-routes.js";
 import { SecurePathValidator, InputSanitizer } from "./security-utils.js";
@@ -30,16 +32,29 @@ try {
 	normalizedUploadsDir = validateAndCanonicalizeDirectory(uploadsDir);
 	normalizedResultDir = validateAndCanonicalizeDirectory(resultDir);
 } catch (error) {
-	console.error("Directory validation failed:", error);
+	logger.error(
+		"Directory validation failed during startup",
+		error instanceof Error ? error : new Error(String(error))
+	);
 	throw error;
 }
 
-// Ensure directories exist and are properly secured
-if (!fs.existsSync(normalizedUploadsDir)) {
-	fs.mkdirSync(normalizedUploadsDir, { recursive: true });
-}
-if (!fs.existsSync(normalizedResultDir)) {
-	fs.mkdirSync(normalizedResultDir, { recursive: true });
+// Initialize directories asynchronously
+async function ensureDirectoriesExist(): Promise<void> {
+	try {
+		await fsPromises.mkdir(normalizedUploadsDir, { recursive: true });
+		await fsPromises.mkdir(normalizedResultDir, { recursive: true });
+		logger.info("Directories initialized successfully", {
+			uploadsDir: normalizedUploadsDir,
+			resultDir: normalizedResultDir,
+		});
+	} catch (error) {
+		logger.error(
+			"Failed to create directories",
+			error instanceof Error ? error : new Error(String(error))
+		);
+		throw error;
+	}
 }
 
 // Security utility function to validate file paths and prevent path traversal
@@ -74,7 +89,10 @@ function validateFilePath(filePath: string, allowedDirectory: string): boolean {
 		);
 	} catch (error) {
 		// If path resolution fails for any reason, deny access
-		console.error("Path validation error:", error);
+		logger.error(
+			"Path validation error during security check",
+			error instanceof Error ? error : new Error(String(error))
+		);
 		return false;
 	}
 }
@@ -113,18 +131,21 @@ function secureFileOperation(
 			canonicalFilePath === canonicalBaseDir;
 
 		if (!isWithinBase) {
-			console.warn(
-				`Security violation: ${operation} attempted outside base directory`
-			);
-			console.warn(`File path: ${canonicalFilePath}`);
-			console.warn(`Base directory: ${canonicalBaseDir}`);
+			logger.securityWarning(`${operation} attempted outside base directory`, {
+				filePath: canonicalFilePath,
+				baseDirectory: canonicalBaseDir,
+				operation,
+			});
 			return false;
 		}
 
 		return true;
 	} catch (error) {
 		// nosemgrep: javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring
-		console.error(`Security check failed for ${operation}:`, error);
+		logger.error(
+			`Security check failed for ${operation}`,
+			error instanceof Error ? error : new Error(String(error))
+		);
 		return false;
 	}
 }
@@ -181,6 +202,9 @@ const upload = multer({
 export async function registerRoutes(app: Express): Promise<Server> {
 	const httpServer = createServer(app);
 
+	// Initialize directories
+	await ensureDirectoriesExist();
+
 	// Set up user for demo purposes
 	let demoUser = await storage.getUserByUsername("demo");
 	if (!demoUser) {
@@ -233,11 +257,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 				// Security: Validate uploaded file path
 				if (!validateFilePath(req.file.path, normalizedUploadsDir)) {
-					// Clean up the invalid file
-					if (fs.existsSync(req.file.path)) {
-						// nosemgrep: javascript.express.express-fs-filename.express-fs-filename
-						// nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal, javascript.express.express-fs-filename.express-fs-filename
-						fs.unlinkSync(req.file.path); // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal
+					// Clean up the invalid file asynchronously
+					try {
+						await fsPromises.unlink(req.file.path); // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal
+						logger.info("Cleaned up invalid uploaded file", {
+							filePath: req.file.path,
+						});
+					} catch (cleanupError) {
+						logger.warn("Failed to cleanup invalid file", {
+							filePath: req.file.path,
+							error:
+								cleanupError instanceof Error
+									? cleanupError.message
+									: String(cleanupError),
+						});
 					}
 					return res
 						.status(403)
@@ -277,12 +310,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
 						}
 					})
 					.catch((err) => {
-						console.error("Error analyzing audio:", err);
+						logger.error(
+							"Error analyzing audio metadata",
+							err instanceof Error ? err : new Error(String(err))
+						);
 					});
 
 				return res.status(201).json(track);
 			} catch (error) {
-				console.error("Upload error:", error);
+				logger.uploadError(
+					"File upload failed",
+					error instanceof Error ? error : new Error(String(error))
+				);
 				const errorMessage =
 					error instanceof Error ? error.message : "Unknown error";
 				return res
@@ -314,7 +353,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 			return res.json(track);
 		} catch (error) {
-			console.error("Get track error:", error);
+			logger.apiError(
+				"/api/tracks/:id",
+				error instanceof Error ? error : new Error(String(error))
+			);
 			const errorMessage =
 				error instanceof Error ? error.message : "Unknown error";
 			return res
@@ -345,7 +387,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 			// Delete files with enhanced security validation
 			for (const track of tracks) {
-				// Validate and delete original file
+				// Validate and delete original file asynchronously
 				if (
 					track.originalPath &&
 					secureFileOperation(
@@ -354,21 +396,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
 						"delete"
 					)
 				) {
-					if (fs.existsSync(track.originalPath)) {
-						// nosemgrep: javascript.express.express-fs-filename.express-fs-filename
-						// nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal, javascript.express.express-fs-filename.express-fs-filename
-						fs.unlinkSync(track.originalPath); // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal
+					try {
+						await fsPromises.unlink(track.originalPath); // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal
+						logger.info("Deleted original file", {
+							filePath: track.originalPath,
+						});
+					} catch (error) {
+						logger.warn("Failed to delete original file", {
+							filePath: track.originalPath,
+							error: error instanceof Error ? error.message : String(error),
+						});
 					}
 				}
 
-				// Validate and delete extended files
+				// Validate and delete extended files asynchronously
 				if (track.extendedPaths && Array.isArray(track.extendedPaths)) {
 					for (const filePath of track.extendedPaths) {
 						if (secureFileOperation(filePath, normalizedResultDir, "delete")) {
-							if (fs.existsSync(filePath)) {
-								// nosemgrep: javascript.express.express-fs-filename.express-fs-filename
-								// nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal, javascript.express.express-fs-filename.express-fs-filename
-								fs.unlinkSync(filePath); // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal
+							try {
+								await fsPromises.unlink(filePath); // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal
+								logger.info("Deleted extended file", { filePath });
+							} catch (error) {
+								logger.warn("Failed to delete extended file", {
+									filePath,
+									error: error instanceof Error ? error.message : String(error),
+								});
 							}
 						}
 					}
@@ -648,14 +700,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
 					.json({ message: "Access denied: Invalid file path" });
 			}
 
-			// nosemgrep: javascript.express.express-fs-filename.express-fs-filename
-			if (!fs.existsSync(filePath)) {
+			// Check if file exists and get stats asynchronously
+			let stat;
+			try {
+				stat = await fsPromises.stat(filePath); // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal, javascript.express.express-fs-filename.express-fs-filename
+			} catch (statError) {
+				logger.warn("Failed to access audio file", {
+					filePath,
+					error:
+						statError instanceof Error ? statError.message : String(statError),
+				});
 				return res
 					.status(404)
 					.json({ message: "Audio file not found on disk" });
 			}
 
-			const stat = fs.statSync(filePath); // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal, javascript.express.express-fs-filename.express-fs-filename
 			const fileSize = stat.size;
 			const range = req.headers.range;
 
@@ -742,8 +801,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
 					.json({ message: "Access denied: Invalid file path" });
 			}
 
-			// nosemgrep: javascript.express.express-fs-filename.express-fs-filename
-			if (!fs.existsSync(filePath)) {
+			// Check if extended file exists asynchronously
+			try {
+				await fsPromises.access(filePath); // nosemgrep: javascript.express.express-fs-filename.express-fs-filename
+			} catch (accessError) {
+				logger.warn("Extended audio file not accessible", {
+					filePath,
+					error:
+						accessError instanceof Error
+							? accessError.message
+							: String(accessError),
+				});
 				return res
 					.status(404)
 					.json({ message: "Extended audio file not found on disk" });

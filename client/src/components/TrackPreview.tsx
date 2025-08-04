@@ -171,7 +171,9 @@ const TrackPreview: React.FC<TrackPreviewProps> = ({
 
 			<div
 				className={`tab-content ${activeTab === "comparison" ? "" : "hidden"}`}>
-				{(isProcessed || track?.extendedPaths?.length > 0) && track ? (
+				{(isProcessed ||
+					(track?.extendedPaths?.length && track.extendedPaths.length > 0)) &&
+				track ? (
 					// skipcq: JS-0415
 					<div className='space-y-6'>
 						<div>

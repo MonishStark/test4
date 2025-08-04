@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { logger } from "../../../shared/logger";
 
 /**
  * UploadSection Component
@@ -149,7 +150,11 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onUploadSuccess }) => {
 			// Notify parent component of successful upload with track ID
 			onUploadSuccess(data.id);
 		} catch (error) {
-			console.error("Upload error:", error);
+			logger.uploadError(
+				"File upload failed",
+				error instanceof Error ? error : new Error(String(error)),
+				{ fileName: file.name, fileSize: file.size }
+			);
 
 			// Show error notification with appropriate message
 			toast({
