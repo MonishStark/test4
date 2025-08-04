@@ -14,7 +14,9 @@ import path from "path";
 import fs from "fs";
 
 // Security function to sanitize data for logging
-function sanitizeForLog(data: any): string {
+function sanitizeForLog(
+	data: string | number | boolean | object | null | undefined
+): string {
 	if (typeof data === "string") {
 		// Remove format specifiers and control characters that could manipulate log output
 		return data

@@ -17,7 +17,7 @@
 import type { Express, Request, Response } from "express";
 import { jobQueueManager, JobPriority } from "./jobQueue";
 import { storage } from "./storage";
-import { processingSettingsSchema } from "@shared/schema";
+import { processingSettingsSchema, ProcessingSettings } from "@shared/schema";
 import { InputSanitizer } from "./security-utils.js";
 import path from "path";
 
@@ -28,6 +28,20 @@ interface QueueStats {
 	completed: number;
 	failed: number;
 	total: number;
+}
+
+// Interface for detailed track status response
+interface DetailedTrackStatusResponse {
+	trackId: number;
+	status: string;
+	versionCount: number;
+	hasExtended: boolean;
+	settings?: ProcessingSettings;
+	processing?: {
+		active: boolean;
+		message: string;
+		estimatedTimeRemaining: string;
+	};
 }
 
 /**
@@ -428,12 +442,12 @@ export function setupJobQueueRoutes(app: Express) {
 				}
 
 				// Basic track status
-				const response: any = {
+				const response: DetailedTrackStatusResponse = {
 					trackId: id,
 					status: track.status,
 					versionCount: track.versionCount,
 					hasExtended: (track.extendedPaths as string[])?.length > 0,
-					settings: track.settings,
+					settings: track.settings as ProcessingSettings | undefined,
 				};
 
 				// If track is being processed, try to find active job
