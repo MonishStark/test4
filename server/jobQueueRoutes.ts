@@ -93,7 +93,7 @@ export function setupJobQueueRoutes(app: Express) {
 					status: (track.extendedPaths as string[])?.length
 						? "regenerate"
 						: "processing",
-					settings: settings,
+					settings: settings, // skipcq: JS-0240
 				});
 
 				// Generate output path

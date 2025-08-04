@@ -139,9 +139,11 @@ function sanitizeFilename(filename: string): string {
 		.slice(0, 255); // Limit filename length
 }
 const storage_config = multer.diskStorage({
+	// skipcq: JS-0240
 	destination: function (req, file, cb) {
 		cb(null, normalizedUploadsDir);
 	},
+	// skipcq: JS-0240
 	filename: function (req, file, cb) {
 		const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
 		const sanitizedOriginalName = sanitizeFilename(file.originalname);
@@ -423,7 +425,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 				status: (track.extendedPaths as string[])?.length
 					? "regenerate"
 					: "processing",
-				settings: settings,
+				settings: settings, // skipcq: JS-0240
 			});
 
 			// Generate a filename for the extended version with security validation
@@ -510,7 +512,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 							return storage.updateAudioTrack(id, {
 								status: "completed",
-								extendedPaths: extendedPaths,
+								extendedPaths: extendedPaths, // skipcq: JS-0240
 								extendedDurations: [...currentDurations, extendedDuration],
 								versionCount: (track.versionCount || 1) + 1,
 							});

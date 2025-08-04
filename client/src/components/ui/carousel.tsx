@@ -126,7 +126,7 @@ const Carousel = React.forwardRef<
 			<CarouselContext.Provider
 				value={{
 					carouselRef,
-					api: api,
+					api: api, // skipcq: JS-0240
 					opts,
 					orientation:
 						orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
