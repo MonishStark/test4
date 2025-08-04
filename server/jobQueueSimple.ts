@@ -66,6 +66,25 @@ export interface JobProgress {
 	memoryUsage?: number;
 }
 
+export interface AudioAnalysisJobData {
+	jobId: string;
+	trackId: number;
+	filePath: string;
+	userId: number;
+}
+
+export interface FileCleanupJobData {
+	jobId: string;
+	filePaths: string[];
+	trackId?: number;
+	userId?: number;
+}
+
+export interface PythonScriptResult {
+	stdout: string;
+	stderr: string;
+}
+
 /**
  * Simplified Job Queue Manager (Development/Fallback Mode)
  *
@@ -289,7 +308,7 @@ class SimpleJobQueueManager {
 		scriptPath: string,
 		data: AudioProcessingJobData,
 		updateProgress: (progress: Partial<JobProgress>) => void
-	): Promise<any> {
+	): Promise<PythonScriptResult> {
 		return new Promise((resolve, reject) => {
 			const args = [
 				scriptPath,
@@ -453,12 +472,12 @@ class SimpleJobQueueManager {
 	}
 
 	// Placeholder methods for compatibility
-	async addAudioAnalysisJob(data: any): Promise<string> {
+	async addAudioAnalysisJob(data: AudioAnalysisJobData): Promise<string> {
 		console.log("📊 Audio analysis not available in fallback mode");
 		return data.jobId;
 	}
 
-	async addFileCleanupJob(data: any): Promise<string> {
+	async addFileCleanupJob(data: FileCleanupJobData): Promise<string> {
 		console.log("🧹 File cleanup will be handled manually in fallback mode");
 		return data.jobId;
 	}

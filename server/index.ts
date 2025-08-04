@@ -161,13 +161,21 @@ app.use((req, res, next) => {
 		}
 	});
 
-	app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
-		const status = (err as any).status || (err as any).statusCode || 500;
-		const message = err.message || "Internal Server Error";
+	// Define interface for HTTP errors with status codes
+	interface HttpError extends Error {
+		status?: number;
+		statusCode?: number;
+	}
 
-		res.status(status).json({ message });
-		throw err;
-	});
+	app.use(
+		(err: HttpError, _req: Request, res: Response, _next: NextFunction) => {
+			const status = err.status || err.statusCode || 500;
+			const message = err.message || "Internal Server Error";
+
+			res.status(status).json({ message });
+			throw err;
+		}
+	);
 
 	// Apply security error handler after main error handler
 	app.use(securityErrorHandler);
