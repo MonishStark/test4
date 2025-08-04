@@ -195,17 +195,13 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onUploadSuccess }) => {
 				className={`drop-zone p-8 flex flex-col items-center justify-center text-center cursor-pointer ${
 					isDragActive ? "active" : ""
 				} ${isUploading ? "opacity-50 pointer-events-none" : ""}`}
-				// skipcq: JS-0417
-				// skipcq: JS-0746
+				// skipcq: JS-0417, JS-0746
 				onClick={handleUploadClick}
-				// skipcq: JS-0417
-				// skipcq: JS-0746
+				// skipcq: JS-0417, JS-0746
 				onDragOver={handleDragOver}
-				// skipcq: JS-0417
-				// skipcq: JS-0746
+				// skipcq: JS-0417, JS-0746
 				onDragLeave={handleDragLeave}
-				// skipcq: JS-0417
-				// skipcq: JS-0746
+				// skipcq: JS-0417, JS-0746
 				onDrop={handleDrop}>
 				{/* Conditional rendering based on upload state */}
 				{isUploading ? (

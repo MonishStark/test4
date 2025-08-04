@@ -89,7 +89,6 @@ const VersionPlayer: React.FC<VersionPlayerProps> = ({ track, version }) => {
 					Download
 				</a>
 			</div>
-
 			<div className='waveform-container bg-gray-900 rounded-lg'>
 				<div className='waveform'>
 					<div className='waveform-bars flex items-center h-full p-4'>
@@ -131,7 +130,6 @@ const VersionPlayer: React.FC<VersionPlayerProps> = ({ track, version }) => {
 					</div>
 				</div>
 			</div>
-
 			<div
 				className='player-progress mt-2 mb-2 h-2 bg-gray-200 rounded-full overflow-hidden cursor-pointer'
 				// skipcq: JS-0437, JS-0746
@@ -150,7 +148,6 @@ const VersionPlayer: React.FC<VersionPlayerProps> = ({ track, version }) => {
 					}}
 				/>
 			</div>
-
 			<div className='player-controls flex items-center'>
 				<button
 					className='p-2 rounded-full hover:bg-gray-200'
@@ -176,7 +173,7 @@ const VersionPlayer: React.FC<VersionPlayerProps> = ({ track, version }) => {
 					{formatDuration(currentTime)} / {formatDuration(duration)}
 				</span>
 			</div>
-
+			{/* skipcq: JS-0754 */}
 			<audio
 				ref={audioRef}
 				src={`/api/audio/${track.id}/extended?version=${version}`}

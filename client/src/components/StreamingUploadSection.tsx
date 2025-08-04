@@ -522,17 +522,13 @@ export const StreamingUploadSection: React.FC<StreamingUploadSectionProps> = ({
 							}
               ${isUploading ? "pointer-events-none opacity-50" : ""}
             `}
-						// skipcq: JS-0417
-						// skipcq: JS-0746
+						// skipcq: JS-0417, JS-0746
 						onClick={handleUploadClick}
-						// skipcq: JS-0417
-						// skipcq: JS-0746
+						// skipcq: JS-0417, JS-0746
 						onDragOver={handleDragOver}
-						// skipcq: JS-0417
-						// skipcq: JS-0746
+						// skipcq: JS-0417, JS-0746
 						onDragLeave={handleDragLeave}
-						// skipcq: JS-0417
-						// skipcq: JS-0746
+						// skipcq: JS-0417, JS-0746
 						onDrop={handleDrop}>
 						<span className='material-icons text-5xl text-primary-light mb-4'>
 							cloud_upload

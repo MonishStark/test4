@@ -311,7 +311,6 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 					</div>
 				</div>
 			</div>
-
 			{type === "original" && (
 				<div className='mb-4'>
 					<h4 className='font-medium mb-2'>Waveform</h4>
@@ -362,8 +361,7 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 
 					<div
 						className='player-progress mt-2 mb-2 h-2 bg-gray-200 rounded-full overflow-hidden cursor-pointer relative'
-						// skipcq: JS-0417
-						// skipcq: JS-0746
+						// skipcq: JS-0417, JS-0746
 						onClick={handleProgressClick}>
 						{type === "extended" && (
 							<div
@@ -412,7 +410,6 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 					</div>
 				</div>
 			)}
-
 			{type === "extended" && track.extendedPaths?.length > 0 && (
 				<div className='mt-4'>
 					<div className='flex items-center gap-4 mb-2 text-xs'>
@@ -483,7 +480,7 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 					</div>
 				</div>
 			)}
-
+			{/* skipcq: JS-0754 */}
 			<audio
 				ref={audioRef}
 				src={`/api/audio/${track.id}/${type}`}
