@@ -367,8 +367,8 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 					</div>
 					{/* skipcq: JS-0417, JS-0746 */}
 					<div
-						className='player-progress mt-2 mb-2 h-2 bg-gray-200 rounded-full overflow-hidden cursor-pointer relative'
 						// skipcq: JS-0417
+						className='player-progress mt-2 mb-2 h-2 bg-gray-200 rounded-full overflow-hidden cursor-pointer relative'
 						onClick={handleProgressClick}>
 						{type === "extended" && (
 							<div

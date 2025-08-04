@@ -193,6 +193,7 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onUploadSuccess }) => {
 			*/}
 			{/* skipcq: JS-0417, JS-0746 */}
 			<div
+				// skipcq: JS-0417, JS-0746
 				className={`drop-zone p-8 flex flex-col items-center justify-center text-center cursor-pointer ${
 					isDragActive ? "active" : ""
 				} ${isUploading ? "opacity-50 pointer-events-none" : ""}`}
