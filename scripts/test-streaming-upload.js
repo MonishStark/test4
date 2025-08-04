@@ -11,8 +11,6 @@
  */
 
 import fetch from "node-fetch";
-import fs from "fs";
-import path from "path";
 
 // Utility function to sanitize user input for logging
 function sanitizeForLog(input) {

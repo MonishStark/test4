@@ -9,7 +9,7 @@
 
 import fetch from "node-fetch";
 import { fileURLToPath } from "url";
-import { dirname, join } from "path";
+import { dirname } from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -156,7 +156,7 @@ async function testSecurityHeaders() {
 		console.log("   Security Headers:", securityHeaders);
 
 		const missingHeaders = Object.entries(securityHeaders)
-			.filter(([key, value]) => !value)
+			.filter(([key, value]) => !value) // skipcq: JS-0128
 			.map(([key]) => key);
 
 		if (missingHeaders.length === 0) {

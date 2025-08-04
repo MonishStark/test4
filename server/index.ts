@@ -199,7 +199,6 @@ app.use((req, res, next) => {
 			await jobQueueManager.shutdown();
 			server.close(() => {
 				log("Server shutdown completed");
-				process.exit(0);
 			});
 		} catch (error) {
 			log(
@@ -217,7 +216,6 @@ app.use((req, res, next) => {
 			await jobQueueManager.shutdown();
 			server.close(() => {
 				log("Server shutdown completed");
-				process.exit(0);
 			});
 		} catch (error) {
 			log(
