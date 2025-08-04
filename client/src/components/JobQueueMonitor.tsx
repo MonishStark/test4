@@ -112,6 +112,61 @@ export const JobQueueMonitor: React.FC<JobQueueMonitorProps> = ({
 	const [reconnectAttempts, setReconnectAttempts] = useState(0);
 
 	/**
+	 * Schedule reconnection attempt
+	 */
+	const scheduleReconnect = useCallback(() => {
+		if (reconnectTimeoutRef.current) {
+			clearTimeout(reconnectTimeoutRef.current);
+		}
+
+		// Increment reconnect attempts which will trigger the reconnection effect
+		setReconnectAttempts((prev) => prev + 1);
+	}, []);
+
+	/**
+	 * Handle job status updates
+	 */
+	const handleJobUpdate = useCallback(
+		(jobUpdate: JobStatus) => {
+			const { jobId, status, trackId } = jobUpdate;
+
+			setActiveJobs((prev) => {
+				const updated = new Map(prev);
+
+				if (status === "completed") {
+					// Remove completed job and notify parent
+					updated.delete(jobId);
+					onJobComplete?.(jobId, trackId);
+
+					toast({
+						title: "Job Completed",
+						description: `Audio processing completed for track ${trackId}`,
+						duration: 5000,
+					});
+				} else if (status === "failed") {
+					// Remove failed job and notify parent
+					updated.delete(jobId);
+					const error = jobUpdate.data?.error || "Unknown error";
+					onJobFailed?.(jobId, trackId, error);
+
+					toast({
+						title: "Job Failed",
+						description: `Audio processing failed for track ${trackId}: ${error}`,
+						variant: "destructive",
+						duration: 7000,
+					});
+				} else {
+					// Update active job
+					updated.set(jobId, jobUpdate);
+				}
+
+				return updated;
+			});
+		},
+		[onJobComplete, onJobFailed, toast]
+	);
+
+	/**
 	 * Initialize WebSocket connection
 	 */
 	const initializeWebSocket = useCallback(() => {
@@ -225,66 +280,19 @@ export const JobQueueMonitor: React.FC<JobQueueMonitorProps> = ({
 			);
 			scheduleReconnect();
 		}
-	}, [userId, isAdmin, toast]);
+	}, [userId, isAdmin, toast, scheduleReconnect, handleJobUpdate]);
 
-	/**
-	 * Schedule reconnection attempt
-	 */
-	const scheduleReconnect = useCallback(() => {
-		if (reconnectTimeoutRef.current) {
-			clearTimeout(reconnectTimeoutRef.current);
+	// Effect to handle reconnection attempts
+	useEffect(() => {
+		if (reconnectAttempts > 0) {
+			const delay = Math.min(1000 * Math.pow(2, reconnectAttempts - 1), 30000);
+			const timeout = setTimeout(() => {
+				initializeWebSocket();
+			}, delay);
+
+			return () => clearTimeout(timeout);
 		}
-
-		const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000); // Exponential backoff, max 30s
-
-		reconnectTimeoutRef.current = setTimeout(() => {
-			setReconnectAttempts((prev) => prev + 1);
-			initializeWebSocket();
-		}, delay);
 	}, [reconnectAttempts, initializeWebSocket]);
-
-	/**
-	 * Handle job status updates
-	 */
-	const handleJobUpdate = useCallback(
-		(jobUpdate: JobStatus) => {
-			const { jobId, status, trackId } = jobUpdate;
-
-			setActiveJobs((prev) => {
-				const updated = new Map(prev);
-
-				if (status === "completed") {
-					// Remove completed job and notify parent
-					updated.delete(jobId);
-					onJobComplete?.(jobId, trackId);
-
-					toast({
-						title: "Job Completed",
-						description: `Audio processing completed for track ${trackId}`,
-						duration: 5000,
-					});
-				} else if (status === "failed") {
-					// Remove failed job and notify parent
-					updated.delete(jobId);
-					const error = jobUpdate.data?.error || "Unknown error";
-					onJobFailed?.(jobId, trackId, error);
-
-					toast({
-						title: "Job Failed",
-						description: `Audio processing failed for track ${trackId}: ${error}`,
-						variant: "destructive",
-						duration: 7000,
-					});
-				} else {
-					// Update active job
-					updated.set(jobId, jobUpdate);
-				}
-
-				return updated;
-			});
-		},
-		[onJobComplete, onJobFailed, toast]
-	);
 
 	/**
 	 * Cancel a specific job

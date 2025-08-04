@@ -122,6 +122,7 @@ const ProcessingInfo: React.FC<ProcessingInfoProps> = ({
 	useEffect(() => {
 		let checkCount = 0;
 		const maxChecks = 150; // Maximum 5 minutes of polling (150 * 2s = 5min)
+		let intervalId: number | null = null;
 
 		/**
 		 * Polls the server for current processing status and updates UI accordingly
@@ -182,7 +183,9 @@ const ProcessingInfo: React.FC<ProcessingInfoProps> = ({
 						status: "Complete",
 						steps: prev.steps.map((step) => ({ ...step, status: "completed" })),
 					}));
-					clearInterval(intervalId);
+					if (intervalId) {
+						clearInterval(intervalId);
+					}
 					onComplete();
 
 					toast({
@@ -192,7 +195,9 @@ const ProcessingInfo: React.FC<ProcessingInfoProps> = ({
 					});
 				} else if (data.status === "error") {
 					// Processing failed
-					clearInterval(intervalId);
+					if (intervalId) {
+						clearInterval(intervalId);
+					}
 
 					toast({
 						title: "Processing Failed",
@@ -205,7 +210,9 @@ const ProcessingInfo: React.FC<ProcessingInfoProps> = ({
 
 				// Stop polling after max checks to prevent infinite polling
 				if (checkCount >= maxChecks) {
-					clearInterval(intervalId);
+					if (intervalId) {
+						clearInterval(intervalId);
+					}
 					toast({
 						title: "Processing Timeout",
 						description:
@@ -221,7 +228,7 @@ const ProcessingInfo: React.FC<ProcessingInfoProps> = ({
 
 		// Check status immediately and then every 3 seconds
 		checkStatus();
-		const intervalId = window.setInterval(checkStatus, 3000);
+		intervalId = window.setInterval(checkStatus, 3000);
 
 		return () => {
 			if (intervalId) {

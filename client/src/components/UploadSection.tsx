@@ -61,29 +61,6 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onUploadSuccess }) => {
 	};
 
 	/**
-	 * Handles file drop events and initiates upload process
-	 * Extracts the first file from the drop event and processes it
-	 */
-	const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-		e.preventDefault();
-		setIsDragActive(false);
-
-		if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-			handleFileUpload(e.dataTransfer.files[0]);
-		}
-	};
-
-	/**
-	 * Handles file selection from the file input element
-	 * Triggered when user selects file through click-to-upload
-	 */
-	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		if (e.target.files && e.target.files.length > 0) {
-			handleFileUpload(e.target.files[0]);
-		}
-	};
-
-	/**
 	 * Core file upload handler with comprehensive validation and error handling
 	 *
 	 * This function:
@@ -177,6 +154,29 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onUploadSuccess }) => {
 			if (fileInputRef.current) {
 				fileInputRef.current.value = "";
 			}
+		}
+	};
+
+	/**
+	 * Handles file drop events and initiates upload process
+	 * Extracts the first file from the drop event and processes it
+	 */
+	const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+		e.preventDefault();
+		setIsDragActive(false);
+
+		if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+			handleFileUpload(e.dataTransfer.files[0]);
+		}
+	};
+
+	/**
+	 * Handles file selection from the file input element
+	 * Triggered when user selects file through click-to-upload
+	 */
+	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files && e.target.files.length > 0) {
+			handleFileUpload(e.target.files[0]);
 		}
 	};
 

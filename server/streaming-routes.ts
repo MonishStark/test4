@@ -151,8 +151,8 @@ router.post(
 			}
 
 			// Update progress to processing state
+			// skipcq: JS-0339
 			updateUploadProgress(uploadId!, {
-				// skipcq: JS-0339
 				status: "processing",
 				percentage: 100,
 			});
@@ -191,8 +191,8 @@ router.post(
 			}
 
 			// Final progress update
+			// skipcq: JS-0339
 			updateUploadProgress(uploadId!, {
-				// skipcq: JS-0339
 				status: "completed",
 				percentage: 100,
 			});
