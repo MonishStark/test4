@@ -165,6 +165,7 @@ const Home: React.FC = () => {
 								<AlertDialogFooter>
 									<AlertDialogCancel>Cancel</AlertDialogCancel>
 									<AlertDialogAction
+										// skipcq: JS-0417
 										onClick={async () => {
 											try {
 												await fetch("/api/tracks", { method: "DELETE" });

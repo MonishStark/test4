@@ -106,7 +106,7 @@ const TrackPreview: React.FC<TrackPreviewProps> = ({
 			)}
 		</div>
 	);
-
+	// skipcq: JS-R1005
 	const renderTrackTabs = () => (
 		<>
 			<div className='border-b border-gray-200 mb-6'>

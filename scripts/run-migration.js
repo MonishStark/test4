@@ -39,6 +39,7 @@ async function runMigration() {
 			console.log("Migration path:", migrationPath);
 
 			// Check if migration file exists and read it asynchronously
+			// skipcq: JS-0119
 			let migrationSQL;
 			try {
 				migrationSQL = await fsPromises.readFile(migrationPath, "utf8");

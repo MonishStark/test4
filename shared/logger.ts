@@ -97,6 +97,8 @@ class Logger {
 					// eslint-disable-next-line no-console
 					console.error(formattedMessage);
 					break;
+				default:
+					break;
 			}
 		} else {
 			// In production, only log errors and above
