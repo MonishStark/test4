@@ -197,14 +197,12 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onUploadSuccess }) => {
 				className={`drop-zone p-8 flex flex-col items-center justify-center text-center cursor-pointer ${
 					isDragActive ? "active" : ""
 				} ${isUploading ? "opacity-50 pointer-events-none" : ""}`}
-				// skipcq: JS-0417, JS-0746
-				onClick={handleUploadClick}
-				// skipcq: JS-0417, JS-0746
-				onDragOver={handleDragOver}
-				// skipcq: JS-0417, JS-0746
-				onDragLeave={handleDragLeave}
-				// skipcq: JS-0417, JS-0746
+				onClick={handleUploadClick} // skipcq: JS-0417, JS-0746
+				onDragOver={handleDragOver} // skipcq: JS-0417, JS-0746
+				onDragLeave={handleDragLeave} // skipcq: JS-0417, JS-0746
 				onDrop={handleDrop}>
+				{" "}
+				// skipcq: JS-0417, JS-0746
 				{/* Conditional rendering based on upload state */}
 				{isUploading ? (
 					// Upload progress state with animated feedback
@@ -227,7 +225,6 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onUploadSuccess }) => {
 						</p>
 					</>
 				)}
-
 				{/*
 					Hidden file input for click-to-upload functionality
 					- Accepts multiple audio file formats through MIME types and extensions

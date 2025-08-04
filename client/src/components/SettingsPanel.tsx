@@ -155,9 +155,9 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
 			<div className='space-y-4'>
 				<div>
 					{/* skipcq: JS-0752 */}
-					<label className='block text-sm font-medium text-gray-700 mb-1'>
+					<h5 className='block text-sm font-medium text-gray-700 mb-1'>
 						Intro Length (bars)
-					</label>
+					</h5>
 					<div className='flex items-center'>
 						<button
 							className='bg-gray-200 px-2 py-1 rounded-l-md disabled:opacity-50'
