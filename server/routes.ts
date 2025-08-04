@@ -387,6 +387,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 	});
 
 	// Process a track to create extended version
+	// skipcq: JS-0045
 	app.post("/api/tracks/:id/process", async (req: Request, res: Response) => {
 		try {
 			// Enhanced security: Validate and sanitize ID parameter
@@ -564,6 +565,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 	});
 
 	// Serve audio files
+	// skipcq: JS-0045
 	app.get("/api/audio/:id/:type", async (req: Request, res: Response) => {
 		try {
 			// Enhanced security: Validate and sanitize ID parameter

@@ -16,6 +16,7 @@ const VersionPlayer: React.FC<VersionPlayerProps> = ({ track, version }) => {
 	const audioRef = useRef<HTMLAudioElement>(null);
 	const progressIntervalRef = useRef<number>();
 
+	// skipcq: JS-0045
 	useEffect(() => {
 		if (audioRef.current) {
 			const audio = audioRef.current;

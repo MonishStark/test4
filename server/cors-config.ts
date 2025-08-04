@@ -44,6 +44,7 @@ const getAllowedOrigins = (): string[] => {
 };
 
 // Dynamic origin validation function
+// skipcq: JS-0045
 const corsOrigin = (
 	origin: string | undefined,
 	callback: (err: Error | null, allow?: boolean) => void

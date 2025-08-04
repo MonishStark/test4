@@ -45,7 +45,7 @@ function sanitizeForLog(input: unknown): string {
 	const strInput = typeof input === "string" ? input : String(input);
 	// Remove newlines, carriage returns, and control characters that could be used for log injection
 	return strInput
-		.replace(/[^\x20-\x7E]/g, "") // skipcq: JS-W1035 - Keep only printable ASCII characters for security
+		.replace(/[^\x20-\x7E]/gu, "") // skipcq: JS-W1035 - Keep only printable ASCII characters for security
 		.substring(0, 1000);
 }
 

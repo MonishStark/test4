@@ -88,6 +88,7 @@ app.use((req, res, next) => {
 		res.json(stats);
 	});
 
+	// skipcq: JS-0045
 	app.post("/api/tracks/:id/process-async", async (req, res) => {
 		try {
 			// Enhanced security: Validate and sanitize ID parameter

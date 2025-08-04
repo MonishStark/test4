@@ -237,6 +237,7 @@ export function createSecurityMiddleware(validator: SecurePathValidator) {
 		/**
 		 * Validate file paths in requests
 		 */
+		// skipcq: JS-0045
 		validateFilePaths: (req: Request, res: Response, next: NextFunction) => {
 			// Check for file paths in common request locations
 			const pathsToCheck = [

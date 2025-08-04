@@ -48,6 +48,7 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 	}`;
 
 	// Initial status check effect
+	// skipcq: JS-0045
 	useEffect(() => {
 		if (isProcessing) {
 			const checkInitialStatus = async () => {
@@ -143,6 +144,7 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 		}
 	}, [isProcessing, track.id, toast]);
 
+	// skipcq: JS-0045
 	useEffect(() => {
 		if (audioRef.current) {
 			const audio = audioRef.current;

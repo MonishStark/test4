@@ -21,8 +21,8 @@ function sanitizeForLog(input) {
 	}
 	// Remove newlines, carriage returns, and control characters that could be used for log injection
 	return input
-		.replace(/[\r\n\t]/g, "")
-		.replace(/[^\x20-\x7E]/g, "") // skipcq: JS-W1035 - Keep only printable ASCII characters for security
+		.replace(/[\r\n\t]/gu, "")
+		.replace(/[^\x20-\x7E]/gu, "") // skipcq: JS-W1035 - Keep only printable ASCII characters for security
 		.substring(0, 1000);
 }
 

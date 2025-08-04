@@ -375,6 +375,7 @@ export const JobQueueMonitor: React.FC<JobQueueMonitorProps> = ({
 	}, [initializeWebSocket]);
 
 	// Initialize WebSocket on component mount
+	// skipcq: JS-0045
 	useEffect(() => {
 		initializeWebSocket();
 

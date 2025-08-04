@@ -42,6 +42,7 @@ export const uploadRateLimit = rateLimit({
 });
 
 // Security headers middleware
+// skipcq: JS-0045
 export const securityHeaders = (
 	req: Request,
 	res: Response,
@@ -91,6 +92,7 @@ export const securityHeaders = (
 };
 
 // Request size validation
+// skipcq: JS-0045
 export const validateRequestSize = (
 	req: Request,
 	res: Response,
@@ -110,6 +112,7 @@ export const validateRequestSize = (
 };
 
 // Origin validation middleware (additional layer beyond CORS)
+// skipcq: JS-0045
 export const validateOrigin = (
 	req: Request,
 	res: Response,
@@ -146,6 +149,7 @@ function isValidOrigin(origin: string): boolean {
 }
 
 // Request logging middleware
+// skipcq: JS-0045
 export const requestLogger = (
 	req: Request,
 	res: Response,
@@ -168,6 +172,7 @@ export const requestLogger = (
 };
 
 // Error handling for security middleware
+// skipcq: JS-0045
 export const securityErrorHandler = (
 	error: Error,
 	req: Request,

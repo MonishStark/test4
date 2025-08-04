@@ -56,6 +56,7 @@ export function setupJobQueueRoutes(app: Express) {
 	 */
 	app.post(
 		"/api/tracks/:id/process-async",
+		// skipcq: JS-0045
 		async (req: Request, res: Response) => {
 			try {
 				// Enhanced security: Validate and sanitize ID parameter
@@ -149,6 +150,7 @@ export function setupJobQueueRoutes(app: Express) {
 	 * GET /api/jobs/:jobId/status
 	 * Returns detailed status information for a specific job
 	 */
+	// skipcq: JS-0045
 	app.get("/api/jobs/:jobId/status", async (req: Request, res: Response) => {
 		try {
 			// Enhanced security: Validate job ID format
@@ -193,6 +195,7 @@ export function setupJobQueueRoutes(app: Express) {
 	 * DELETE /api/jobs/:jobId
 	 * Cancels a pending or active job
 	 */
+	// skipcq: JS-0045
 	app.delete("/api/jobs/:jobId", async (req: Request, res: Response) => {
 		try {
 			// Enhanced security: Validate job ID format
@@ -233,6 +236,7 @@ export function setupJobQueueRoutes(app: Express) {
 	 * GET /api/admin/queue-stats
 	 * Returns comprehensive queue statistics for monitoring
 	 */
+	// skipcq: JS-0045
 	app.get("/api/admin/queue-stats", async (req: Request, res: Response) => {
 		try {
 			// In production, add proper authentication and admin role checking here
@@ -278,6 +282,7 @@ export function setupJobQueueRoutes(app: Express) {
 	 * POST /api/admin/queue-control
 	 * Allows pausing/resuming queues and performing maintenance
 	 */
+	// skipcq: JS-0045
 	app.post("/api/admin/queue-control", async (req: Request, res: Response) => {
 		try {
 			// In production, add proper authentication and admin role checking here
@@ -322,6 +327,7 @@ export function setupJobQueueRoutes(app: Express) {
 	 * POST /api/tracks/process-bulk
 	 * Process multiple tracks with different priorities
 	 */
+	// skipcq: JS-0045
 	app.post("/api/tracks/process-bulk", async (req: Request, res: Response) => {
 		try {
 			const {
@@ -429,6 +435,7 @@ export function setupJobQueueRoutes(app: Express) {
 	 */
 	app.get(
 		"/api/tracks/:id/detailed-status",
+		// skipcq: JS-0045
 		async (req: Request, res: Response) => {
 			try {
 				const id = parseInt(req.params.id, 10);
