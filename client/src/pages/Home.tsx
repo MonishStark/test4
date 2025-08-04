@@ -126,9 +126,8 @@ const Home: React.FC = () => {
 				{/* Left column: Upload & Controls */}
 
 				<div className='lg:col-span-4 space-y-6'>
-					{/* skipcq: JS-0417 */}
-					<UploadSection // skipcq: JS-0417
-						onUploadSuccess={handleUploadSuccess}
+					<UploadSection
+						onUploadSuccess={handleUploadSuccess} // skipcq: JS-0417
 					/>
 					{currentTrackId && (
 						<button

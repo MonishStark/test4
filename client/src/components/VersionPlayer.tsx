@@ -136,6 +136,7 @@ const VersionPlayer: React.FC<VersionPlayerProps> = ({ track, version }) => {
 			<div
 				// skipcq: JS-0437, JS-0746, JS-0417
 				className='player-progress mt-2 mb-2 h-2 bg-gray-200 rounded-full overflow-hidden cursor-pointer'
+				// skipcq: JS-0437, JS-0746, JS-0417
 				onClick={(e) => {
 					if (!audioRef.current) return;
 					const rect = e.currentTarget.getBoundingClientRect();
@@ -144,7 +145,6 @@ const VersionPlayer: React.FC<VersionPlayerProps> = ({ track, version }) => {
 					audioRef.current.currentTime = newTime;
 					setCurrentTime(newTime);
 				}}>
-				{/* skipcq: JS-0417, JS-0746, JS-0417 */}
 				<div
 					className='h-full bg-gradient-to-r from-purple-600 to-purple-400 transition-all duration-300'
 					style={{
@@ -177,7 +177,7 @@ const VersionPlayer: React.FC<VersionPlayerProps> = ({ track, version }) => {
 					{formatDuration(currentTime)} / {formatDuration(duration)}
 				</span>
 			</div>
-			{/* skipcq: JS-0754 */}
+
 			<audio
 				// skipcq: JS-0754
 				ref={audioRef}
