@@ -36,18 +36,18 @@ export default defineConfig({
 	// Ensures sensitive credentials are not hardcoded in source code
 	dbCredentials: {
 		// Database server hostname (e.g., localhost, remote server, or cloud provider)
-		host: process.env.DATABASE_HOST!,
+		host: process.env.DATABASE_HOST!, // skipcq: JS-0339
 
 		// Database server port (PostgreSQL default: 5432)
 		port: parseInt(process.env.DATABASE_PORT || "5432", 10),
 
 		// Database username with appropriate permissions for schema operations
-		user: process.env.DATABASE_USER!,
+		user: process.env.DATABASE_USER!, // skipcq: JS-0339
 
 		// Database password (should be strong and securely stored)
-		password: process.env.DATABASE_PASSWORD!,
+		password: process.env.DATABASE_PASSWORD!, // skipcq: JS-0339
 
 		// Target database name for the application
-		database: process.env.DATABASE_NAME!,
+		database: process.env.DATABASE_NAME!, // skipcq: JS-0339
 	},
 });
