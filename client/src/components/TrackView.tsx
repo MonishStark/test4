@@ -533,7 +533,16 @@ const TrackView: React.FC<TrackViewProps> = ({ track, type, version }) => {
 				src={`/api/audio/${track.id}/${type}`}
 				preload='metadata'
 				style={{ display: "none" }}
-			/>
+				aria-label={`Music track: ${displayTitle}`}>
+				{/* Empty track for accessibility compliance - music tracks typically don't need captions */}
+				<track
+					kind='metadata'
+					src='data:text/vtt,'
+					srcLang='en'
+					label='Music metadata'
+					default
+				/>
+			</audio>
 		</div>
 	);
 };

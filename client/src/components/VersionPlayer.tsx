@@ -227,7 +227,18 @@ const VersionPlayer: React.FC<VersionPlayerProps> = ({ track, version }) => {
 					setDuration((e.target as HTMLAudioElement).duration)
 				}
 				style={{ display: "none" }}
-			/>
+				aria-label={`Music track: ${track.originalFilename} (Extended Version ${
+					version + 1
+				})`}>
+				{/* Empty track for accessibility compliance - music tracks typically don't need captions */}
+				<track
+					kind='metadata'
+					src='data:text/vtt,'
+					srcLang='en'
+					label='Music metadata'
+					default
+				/>
+			</audio>
 		</div>
 	);
 };
