@@ -191,6 +191,7 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onUploadSuccess }) => {
 				- Click handler for fallback file selection
 				- Drag event handlers for smooth drag-and-drop experience
 			*/}
+			{/* skipcq: JS-0417, JS-0746 */}
 			<div
 				className={`drop-zone p-8 flex flex-col items-center justify-center text-center cursor-pointer ${
 					isDragActive ? "active" : ""

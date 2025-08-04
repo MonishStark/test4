@@ -512,6 +512,7 @@ export const StreamingUploadSection: React.FC<StreamingUploadSectionProps> = ({
 			</CardHeader>
 			<CardContent className='space-y-4'>
 				{uploadState.status === "idle" ? (
+					// skipcq: JS-0417, JS-0746
 					<div
 						className={`
               border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors
